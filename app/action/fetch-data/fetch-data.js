@@ -1,16 +1,24 @@
 // @flow
-import { fetchWeatherData } from '../../services/http-requests';
 import { fetchDataError } from './fetch-data-error';
 import { fetchDataRequest } from './fetch-data-request';
 import { fetchDataSuccess } from './fetch-data-success';
+import config from '../../utils/APIConfig';
 
-export const fetchData = () => (
-  (dispatch) => {
-    console.log('param.data ');
-    dispatch(fetchDataRequest());
-    fetchWeatherData()
-      .then((dataInfo) => dispatch(fetchDataSuccess(dataInfo)))
-      .catch((err) => dispatch(fetchDataError(err)));
-    return { type: 'ADD_TODO', text: 'Go to swimming pool' };
-  }
+
+export const fetchData = (data) => ((dispatch) => {
+  dispatch(fetchDataRequest());
+  return fetch(config.API_URL)
+    .then((res) => res.json())
+    .then((dataInfo) => dispatch(fetchDataSuccess(dataInfo)))
+    .catch((err) => err);
+}
+);
+
+export const fetchDataArticles = (data) => ((dispatch) => {
+  dispatch(fetchDataRequest());
+  return fetch(config.ARTICLES_URL)
+    .then((res) => res.json())
+    .then((dataInfo) => dispatch(fetchDataSuccess(dataInfo)))
+    .catch((err) => err);
+}
 );

@@ -95,6 +95,6 @@ function todos(state = [], action) {
             return state
     }
 }
-const reducer = combineReducers({ visibilityFilter, todos, serviceReducer })
+const reducer = combineReducers({ visibilityFilter, todos, serReducer: serviceReducer })
 
 export default reducer; 

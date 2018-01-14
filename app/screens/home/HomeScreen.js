@@ -1,116 +1,158 @@
 import React from 'react';
-import { parentBorder } from '../../utils/scale'
 import {
-  StyleSheet,
+  FlatList,
   Image,
   View,
-  Dimensions,
-  StatusBar
+  TouchableOpacity
 } from 'react-native';
 import {
   RkText,
-  RkTheme
-} from 'react-native-ui-kitten'
-import { ProgressBar } from '../../components';
-import {
-  KittenTheme
-} from '../../config/theme';
-import { NavigationActions } from 'react-navigation';
-import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
-
-let timeFrame = 500;
+  RkCard, RkStyleSheet
+} from 'react-native-ui-kitten';
+import { connect } from "react-redux";
+import _ from 'lodash'
+import { getServiceSelector } from '../../data/store/DataProvider';
+import { fetchDataArticles } from "../../action/fetch-data/fetch-data";
+import { SocialBar } from '../../components/socialBar';
+let moment = require('moment');
 
 export class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Article List'.toUpperCase()
+  };
 
   constructor(props) {
     super(props);
-    this.state = {
-      progress: 0
-    }
+    this.data = [{
+      id: '1',
+      image: '',
+      title: '',
+      time: '',
+      seoDescription: ''
+    }, {
+      id: '2',
+      image: '',
+      title: '',
+      time: '',
+      seoDescription: ''
+    }]
+    this.renderItem = this._renderItem.bind(this);
   }
 
   componentDidMount() {
-    StatusBar.setHidden(true, 'none');
-    RkTheme.setTheme(KittenTheme);
-    this.timer = setInterval(() => {
-      if (this.state.progress == 1) {
-        clearInterval(this.timer);
-        // setTimeout(() => {
-        //   StatusBar.setHidden(false, 'slide');
-        //   let toHome = NavigationActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({routeName: 'Home'})]
-        //   });
-        //   this.props.navigation.dispatch(toHome)
-        // }, timeFrame);
-      } else {
-        let random = Math.random() * 0.5;
-        let progress = this.state.progress + random;
-        if (progress > 1) {
-          progress = 1;
-        }
-        this.setState({ progress });
-      }
-    }, timeFrame)
+    this.props.fetchData({ data: '134' })
+  }
 
+  reloadData(data) {
+    this.data = data;
+  }
+
+  _keyExtractor(post, index) {
+    return post.id;
+  }
+
+  converImageURL(image) {
+    return 'https://swastika.io' + image
+  }
+
+  _renderItem(info) {
+    console.log("indeo  " + JSON.stringify(info));
+    return (
+      <TouchableOpacity
+        delayPressIn={70}
+        activeOpacity={0.8}
+        onPress={() => this.props.navigation.navigate('Article', { id: info.item.id })}>
+        <RkCard rkType='backImg'>
+          <Image rkCardImg source={{
+            uri: this.converImageURL(info.item.image),
+            cache: 'only-if-cached',
+          }} />
+          <View rkCardImgOverlay rkCardContent style={styles.overlay}>
+            <RkText rkType='header2 inverseColor'>{info.item.title}</RkText>
+            <RkText rkType='secondary2 inverseColor'>{moment().add(-300, 'seconds').fromNow()}</RkText>
+            <View rkCardFooter style={styles.footer}>
+              <SocialBar rkType='leftAligned' />
+            </View >
+          </View>
+        </RkCard>
+      </TouchableOpacity>
+    )
   }
 
   render() {
-    let width = Dimensions.get('window').width;
+    const { dataActicles } = this.props;
+    console.log("dataActicles  " + dataActicles)
+    if (dataActicles) {
+      const { isSucceed, data } = dataActicles;
+      if (isSucceed) {
+        this.data = data.items;
+      }
+    }
     return (
-      <View style={styles.containerParent}>
-        <View style={styles.container} flexDirection={'column'}>
-          <View style={styles.text}>
-            <RkText rkType='logo' style={styles.appName} >Swastika</RkText>
-            <RkText rkType='light' style={styles.hero}>Smileway</RkText>
-          </View>
-          <ProgressBar
-            color={RkTheme.current.colors.accent}
-            style={styles.progress}
-            progress={this.state.progress} width={scale(320)} />
-        </View>
-      </View>
+      <FlatList data={this.data}
+        renderItem={this.renderItem}
+        keyExtractor={this._keyExtractor}
+        style={styles.root} />
+
     )
   }
 }
 
-let styles = StyleSheet.create({
-  containerParent: {
-    backgroundColor: '#000000',
-    justifyContent: 'space-between',
-    flex: 1
+let styles = RkStyleSheet.create(theme => ({
+  root: {
+    backgroundColor: theme.colors.screen.base
   },
-  container: {
-    backgroundColor: KittenTheme.colors.screen.base,
-    justifyContent: 'space-between',
-    flex: 1
+  overlay: {
+    justifyContent: 'flex-end',
   },
-  imageEdge: {
-    resizeMode: 'cover',
-    height: scaleVertical(15),
-  },
-  image: {
-    resizeMode: 'cover',
-    height: scaleVertical(430),
-  },
-  text: {
-    flexDirection: 'column',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  hero: {
-    marginTop: 10,
-    fontSize: 15,
-    color: '#9a9d9f'
-  },
-  appName: {
-    fontSize: 37,
-    color: '#606060'
-  },
-  progress: {
-    alignSelf: 'center',
-    marginBottom: 35,
-    backgroundColor: '#e5e5e5'
+  footer: {
+    width: 240
   }
-});
+}));
+
+
+function isEmpty(obj) {
+
+  // null and undefined are "empty"
+  if (obj == null) return true;
+
+  // Assume if it has a length property with a non-zero value
+  // that that property is correct.
+  if (obj.length > 0) return false;
+  if (obj.length === 0) return true;
+
+  // If it isn't an object at this point
+  // it is empty, but it can't be anything *but* empty
+  // Is it empty?  Depends on your application.
+  if (typeof obj !== "object") return true;
+
+  // Otherwise, does it have any properties of its own?
+  // Note that this doesn't handle
+  // toString and valueOf enumeration bugs in IE < 9
+  for (var key in obj) {
+    if (hasOwnProperty.call(obj, key)) return false;
+  }
+
+  return true;
+}
+
+const mapStateToProps = (state) => {
+  if (!isEmpty(state.serReducer.dataInfo))
+    return {
+      dataActicles: state.serReducer.dataInfo
+    }
+  return {
+    dataActicles: null
+  }
+};
+const mapDispatchToProps = (dispatch) => (
+  {
+    fetchData: (data) => dispatch(fetchDataArticles(data)),
+    send: () => dispatch({
+      type: 'SET_VISIBILITY_FILTER',
+      filter: 'SHOW_COMPLETED'
+    }),
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

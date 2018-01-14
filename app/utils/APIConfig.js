@@ -1,7 +1,7 @@
 // @flow
 
-const API_KEY = 'YOUR API KEY';
+const HOST = 'https://swastika.io';
 
 export default {
-  API_URL: `https://api.darksky.net/forecast/${API_KEY}/40.680925,-73.974663`,
+  ARTICLES_URL: `${HOST}/api/vi-vn/articles/5/0`,
 };

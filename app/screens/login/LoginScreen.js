@@ -14,12 +14,12 @@ import {
     RkTheme
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
-import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/';
 import PropTypes from "prop-types";
 import { getServiceSelector } from '../../data/store/DataProvider';
 import { fetchData } from "../../action/fetch-data/fetch-data";
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
+import { UserInfo } from '../../data/userProfile/UserProfile'
 
 class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -36,7 +36,19 @@ class LoginScreen extends React.Component {
 
     submitLogin() {
 
-        this.props.fetchData({ data: 1 })
+        this.props.navigation.navigate('Home')
+        // let example = {
+        //     username: "Mark",
+        //     password: "Galea"
+        // };
+
+        // let clientWithType = Object.assign(new UserInfo(), example)
+        // clientWithType.displayName();
+        // this.props.fetchData({ data: '134' })
+
+
+
+
         // var dataPost = {
         //     access_token: '',
         //     device_id: '34534543534543',
@@ -76,6 +88,7 @@ class LoginScreen extends React.Component {
                 style={styles.screen}>
                 <View style={styles.container}>
                     <View style={styles.form}>
+                        <Image style={[styles.image, { height: 100, width: 100 }]} rkCardImg source={require('../../assets/icons/logoApp.png')} />
                         <RkTextInput rkType='rounded' placeholder='Username' onChangeText={(text => this.setState({ username: text }))} />
                         <RkTextInput rkType='rounded' placeholder='Password' secureTextEntry={true} onChangeText={(text => this.setState({ password: text }))} />
                         <GradientButton onPress={() => {
@@ -104,8 +117,8 @@ let styles = RkStyleSheet.create(theme => ({
         backgroundColor: theme.colors.screen.base
     },
     image: {
-        resizeMode: 'cover',
-        marginBottom: scaleVertical(10),
+        resizeMode: 'contain',
+        marginBottom: scaleVertical(30),
     },
     container: {
         paddingHorizontal: 17,
@@ -118,6 +131,8 @@ let styles = RkStyleSheet.create(theme => ({
     },
     form: {
         flex: 1,
+        marginLeft: 20,
+        marginRight: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -136,7 +151,7 @@ let styles = RkStyleSheet.create(theme => ({
 const mapStateToProps = (state) => getServiceSelector(state);
 const mapDispatchToProps = (dispatch) => (
     {
-        fetchData: () => dispatch(fetchData()),
+        fetchData: (data) => dispatch(fetchData(data)),
         send: () => dispatch({
             type: 'SET_VISIBILITY_FILTER',
             filter: 'SHOW_COMPLETED'

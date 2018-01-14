@@ -7,5 +7,4 @@ export const fetchWeatherData = () => (
     .then((res) => res.json())
     .then((data) => data.currently)
     .catch((err) => err)
-
 );

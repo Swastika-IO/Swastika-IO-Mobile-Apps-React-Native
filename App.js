@@ -6,13 +6,16 @@ import {
 import { withRkTheme } from 'react-native-ui-kitten';
 import * as Screens from './app/screens';
 import LoginScreen from './app/screens/login/LoginScreen';
+import HomeScreen from './app/screens/home/HomeScreen';
 import logger from "redux-logger";
 import { bootstrap } from './app/config/bootstrap';
 import { applyMiddleware, createStore } from "redux";
 import Reducer from "./app/data/store/DataProvider";
 import { Provider } from "react-redux";
+import configureStore from './app/utils/configureStore';
 
-const store = createStore(Reducer, applyMiddleware(logger));
+
+const store = configureStore({});
 
 bootstrap();
 
@@ -34,6 +37,9 @@ const KittenApp = StackNavigator({
   },
   Login: {
     screen: LoginScreen
+  },
+  Home: {
+    screen: HomeScreen
   }
   // Home: {
   //   screen: DrawerNavigator({
@@ -46,9 +52,11 @@ const KittenApp = StackNavigator({
   //       contentComponent: (props) => <SideMenu {...props}/>
   //     })
   // }
-}, {
-    headerMode: 'none',
-  });
+}, 
+// {
+//     headerMode: 'none',
+//   }
+);
 
 
 export default () => (

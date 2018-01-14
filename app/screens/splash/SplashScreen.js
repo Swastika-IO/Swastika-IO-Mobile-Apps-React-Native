@@ -21,7 +21,9 @@ import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 let timeFrame = 500;
 
 export class SplashScreen extends React.Component {
-
+  static navigationOptions = {
+    header: null,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +41,7 @@ export class SplashScreen extends React.Component {
           StatusBar.setHidden(false, 'slide');
           let toHome = NavigationActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({routeName: 'Login'})]
+            actions: [NavigationActions.navigate({ routeName: 'Login' })]
           });
           this.props.navigation.dispatch(toHome)
         }, timeFrame);
