@@ -5,7 +5,14 @@ import {
 } from 'react-navigation';
 import { withRkTheme } from 'react-native-ui-kitten';
 import * as Screens from './app/screens';
+import LoginScreen from './app/screens/login/LoginScreen';
+import logger from "redux-logger";
 import { bootstrap } from './app/config/bootstrap';
+import { applyMiddleware, createStore } from "redux";
+import Reducer from "./app/data/store/DataProvider";
+import { Provider } from "react-redux";
+
+const store = createStore(Reducer, applyMiddleware(logger));
 
 bootstrap();
 
@@ -26,7 +33,7 @@ const KittenApp = StackNavigator({
     screen: Screens.SplashScreen
   },
   Login: {
-    screen: Screens.LoginScreen
+    screen: LoginScreen
   }
   // Home: {
   //   screen: DrawerNavigator({
@@ -45,10 +52,12 @@ const KittenApp = StackNavigator({
 
 
 export default () => (
-  <KittenApp
-    onNavigationStateChange={(prevState, currentState) => {
-      const currentScreen = getCurrentRouteName(currentState);
-      const prevScreen = getCurrentRouteName(prevState);
-    }}
-  />
+  <Provider store={store}>
+    <KittenApp
+      onNavigationStateChange={(prevState, currentState) => {
+        const currentScreen = getCurrentRouteName(currentState);
+        const prevScreen = getCurrentRouteName(prevState);
+      }}
+    />
+  </Provider>
 );

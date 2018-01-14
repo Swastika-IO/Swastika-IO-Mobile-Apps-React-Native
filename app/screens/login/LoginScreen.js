@@ -13,11 +13,15 @@ import {
     RkStyleSheet,
     RkTheme
 } from 'react-native-ui-kitten';
+import { connect } from "react-redux";
 import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/';
+import PropTypes from "prop-types";
+import { getServiceSelector } from '../../data/store/DataProvider';
+import { fetchData } from "../../action/fetch-data/fetch-data";
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 
-export class LoginScreen extends React.Component {
+class LoginScreen extends React.Component {
     static navigationOptions = {
         header: null,
     };
@@ -32,34 +36,35 @@ export class LoginScreen extends React.Component {
 
     submitLogin() {
 
-        var dataPost = {
-            access_token: '',
-            device_id: '34534543534543',
-            login_name: this.state.username,
-            password: this.state.password
-        }
+        this.props.fetchData({ data: 1 })
+        // var dataPost = {
+        //     access_token: '',
+        //     device_id: '34534543534543',
+        //     login_name: this.state.username,
+        //     password: this.state.password
+        // }
 
-        var formBody = [];
-        for (var property in dataPost) {
-            var encodedKey = encodeURIComponent(property);
-            var encodedValue = encodeURIComponent(dataPost[property]);
-            formBody.push(encodedKey + "=" + encodedValue);
-        }
-        formBody = formBody.join("&");
+        // var formBody = [];
+        // for (var property in dataPost) {
+        //     var encodedKey = encodeURIComponent(property);
+        //     var encodedValue = encodeURIComponent(dataPost[property]);
+        //     formBody.push(encodedKey + "=" + encodedValue);
+        // }
+        // formBody = formBody.join("&");
 
-        console.log('this.state.username ' + this.state.username);
-        console.log('this.state.password ' + this.state.password);
+        // console.log('this.state.username ' + this.state.username);
+        // console.log('this.state.password ' + this.state.password);
 
-        fetch('https://www.toonies.vn/api/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
+        // fetch('https://www.toonies.vn/api/user/login', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        //     },
 
-            body: formBody,
-        }).then((response) => response.json()).then((responseJson) => {
-            console.log(responseJson);
-        });
+        //     body: formBody,
+        // }).then((response) => response.json()).then((responseJson) => {
+        //     console.log(responseJson);
+        // });
 
     }
 
@@ -127,3 +132,17 @@ let styles = RkStyleSheet.create(theme => ({
         flexDirection: 'row',
     }
 }));
+
+const mapStateToProps = (state) => getServiceSelector(state);
+const mapDispatchToProps = (dispatch) => (
+    {
+        fetchData: () => dispatch(fetchData()),
+        send: () => dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter: 'SHOW_COMPLETED'
+        }),
+    }
+);
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
