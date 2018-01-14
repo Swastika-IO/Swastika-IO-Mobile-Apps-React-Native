@@ -2,7 +2,7 @@ import Storage from 'react-native-storage';
 import { AsyncStorage } from 'react-native';
 import { combineReducers } from "redux";
 
-let storage = new Storage({
+export let storage = new Storage({
     // maximum capacity, default 1000 
     size: 1000,
 
@@ -25,6 +25,48 @@ let storage = new Storage({
     }
 })
 
+export function saveData(keyStore, dataSave) {
+    storage.save({
+        key: keyStore,   // Note: Do not use underscore("_") in key!
+        data: dataSave,
+        // if not specified, the defaultExpires will be applied instead.
+        // if set to null, then it will never expire.
+        expires: 1000 * 3600
+    });
+}
+
+export const loadData = (keyStore) => (
+    storage.load({
+        key: keyStore,
+
+        // // autoSync(default true) means if data not found or expired,
+        // // then invoke the corresponding sync method
+        // autoSync: true,
+
+        // // syncInBackground(default true) means if data expired,
+        // // return the outdated data first while invoke the sync method.
+        // // It can be set to false to always return data provided by sync method when expired.(Of course it's slower)
+        // syncInBackground: true,
+
+        // // you can pass extra params to sync method
+        // // see sync example below for example
+    }).then(data => {
+        // found data go to then()
+        data
+    }).catch(err => {
+        // any exception including data not found 
+        // goes to catch()
+        console.warn(err.message);
+        switch (err.name) {
+            case 'NotFoundError':
+                // TODO;
+                break;
+            case 'ExpiredError':
+                // TODO
+                break;
+        }
+    })
+);
 const initialState = {
     dataInfo: {},
     isLoading: false,

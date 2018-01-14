@@ -81000,8 +81000,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
             },
             form: {
                 flex: 1,
-                marginLeft: 20,
-                marginRight: 20,
+                paddingLeft: 20,
+                paddingRight: 20,
                 justifyContent: 'center',
                 alignItems: 'center'
             },
@@ -82777,9 +82777,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.getServiceSelector = undefined;
+    exports.getServiceSelector = exports.loadData = exports.storage = undefined;
 
     var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    exports.saveData = saveData;
 
     var _reactNativeStorage = require(_dependencyMap[0], "react-native-storage");
 
@@ -82793,13 +82795,42 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
     function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-    var storage = new _reactNativeStorage2.default({
+    var storage = exports.storage = new _reactNativeStorage2.default({
         size: 1000,
         storageBackend: _reactNative.AsyncStorage,
         defaultExpires: 1000 * 3600 * 24,
         enableCache: true,
         sync: {}
     });
+
+    function saveData(keyStore, dataSave) {
+        storage.save({
+            key: keyStore,
+            data: dataSave,
+            expires: 1000 * 3600
+        });
+    }
+
+    var loadData = exports.loadData = function loadData(keyStore) {
+        return storage.load({
+            key: keyStore,
+            autoSync: true,
+            syncInBackground: true
+        }).then(function (data) {
+            data;
+        }).catch(function (err) {
+            console.warn(err.message);
+
+            switch (err.name) {
+                case 'NotFoundError':
+                    break;
+
+                case 'ExpiredError':
+                    break;
+            }
+        });
+    };
+
     var initialState = {
         dataInfo: {},
         isLoading: false,
@@ -83592,9 +83623,9 @@ __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var HOST = 'https://swastika.io';
+  var HOST = exports.HOST = 'https://swastika.io';
   exports.default = {
-    ARTICLES_URL: HOST + "/api/vi-vn/articles/1/0"
+    ARTICLES_URL: HOST + "/api/vi-vn/articles/5/0"
   };
 },637,[],"Swastika/app/utils/APIConfig.js");
 __d(function (global, require, module, exports, _dependencyMap) {
@@ -83672,6 +83703,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _socialBar = require(_dependencyMap[8], "../../components/socialBar");
 
+  var _APIConfig = require(_dependencyMap[9], "../../utils/APIConfig");
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -83699,7 +83732,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
     };
   }
 
-  var moment = require(_dependencyMap[9], 'moment');
+  var moment = require(_dependencyMap[10], 'moment');
 
   var HomeScreen = exports.HomeScreen = _wrapComponent("HomeScreen")((_temp = _class = function (_React$Component) {
     _inherits(HomeScreen, _React$Component);
@@ -83709,19 +83742,29 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
       var _this = _possibleConstructorReturn(this, (HomeScreen.__proto__ || Object.getPrototypeOf(HomeScreen)).call(this, props));
 
-      _this.data = [{
-        id: '1',
-        image: '',
-        title: '',
-        time: '',
-        seoDescription: ''
-      }, {
-        id: '2',
-        image: '',
-        title: '',
-        time: '',
-        seoDescription: ''
-      }];
+      _this.state = {
+        refreshing: false
+      };
+      _this.data = null;
+
+      _DataProvider.storage.load({
+        key: 'acticle'
+      }).then(function (ret) {
+        _this.data = ret;
+        console.log("load ccuess ");
+        console.log(JSON.stringify(_this.data));
+      }).catch(function (err) {
+        console.warn(err.message);
+
+        switch (err.name) {
+          case 'NotFoundError':
+            break;
+
+          case 'ExpiredError':
+            break;
+        }
+      });
+
       _this.renderItem = _this._renderItem.bind(_this);
       return _this;
     }
@@ -83729,14 +83772,34 @@ __d(function (global, require, module, exports, _dependencyMap) {
     _createClass(HomeScreen, [{
       key: "componentDidMount",
       value: function componentDidMount() {
-        this.props.fetchData({
-          data: '134'
-        });
+        this.props.fetchData();
       }
     }, {
-      key: "reloadData",
-      value: function reloadData(data) {
-        this.data = data;
+      key: "_onRefresh",
+      value: function _onRefresh() {
+        this.setState({
+          refreshing: true
+        });
+        this.props.fetchData();
+      }
+    }, {
+      key: "componentWillReceiveProps",
+      value: function componentWillReceiveProps(nextProps) {
+        var dataActicles = nextProps.dataActicles;
+
+        if (dataActicles) {
+          var isSucceed = dataActicles.isSucceed,
+              data = dataActicles.data;
+
+          if (isSucceed) {
+            console.log("save ccuess " + data.items);
+            (0, _DataProvider.saveData)('acticle', data.items);
+          }
+
+          this.setState({
+            refreshing: false
+          });
+        }
       }
     }, {
       key: "_keyExtractor",
@@ -83746,14 +83809,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }, {
       key: "converImageURL",
       value: function converImageURL(image) {
-        return 'https://swastika.io' + image;
+        return _APIConfig.HOST + image;
       }
     }, {
       key: "_renderItem",
       value: function _renderItem(info) {
         var _this2 = this;
 
-        console.log("indeo  " + JSON.stringify(info));
         return _react3.default.createElement(
           _reactNative.TouchableOpacity,
           {
@@ -83761,12 +83823,12 @@ __d(function (global, require, module, exports, _dependencyMap) {
             activeOpacity: 0.8,
             onPress: function onPress() {
               return _this2.props.navigation.navigate('Article', {
-                id: info.id
+                id: info.item.id
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 61
+              lineNumber: 106
             }
           },
           _react3.default.createElement(
@@ -83775,18 +83837,18 @@ __d(function (global, require, module, exports, _dependencyMap) {
               rkType: "backImg",
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 65
+                lineNumber: 110
               }
             },
             _react3.default.createElement(_reactNative.Image, {
               rkCardImg: true,
               source: {
-                uri: this.converImageURL(info.image),
+                uri: this.converImageURL(info.item.image),
                 cache: 'only-if-cached'
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 66
+                lineNumber: 111
               }
             }),
             _react3.default.createElement(
@@ -83797,7 +83859,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.overlay,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 70
+                  lineNumber: 115
                 }
               },
               _react3.default.createElement(
@@ -83806,10 +83868,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   rkType: "header2 inverseColor",
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 71
+                    lineNumber: 116
                   }
                 },
-                info.title
+                info.item.title
               ),
               _react3.default.createElement(
                 _reactNativeUiKitten.RkText,
@@ -83817,7 +83879,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   rkType: "secondary2 inverseColor",
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 72
+                    lineNumber: 117
                   }
                 },
                 moment().add(-300, 'seconds').fromNow()
@@ -83829,14 +83891,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   style: styles.footer,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 73
+                    lineNumber: 118
                   }
                 },
                 _react3.default.createElement(_socialBar.SocialBar, {
                   rkType: "leftAligned",
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 74
+                    lineNumber: 119
                   }
                 })
               )
@@ -83848,7 +83910,6 @@ __d(function (global, require, module, exports, _dependencyMap) {
       key: "render",
       value: function render() {
         var dataActicles = this.props.dataActicles;
-        console.log("dataActicles  " + dataActicles);
 
         if (dataActicles) {
           var isSucceed = dataActicles.isSucceed,
@@ -83862,11 +83923,19 @@ __d(function (global, require, module, exports, _dependencyMap) {
         return _react3.default.createElement(_reactNative.FlatList, {
           data: this.data,
           renderItem: this.renderItem,
+          refreshControl: _react3.default.createElement(_reactNative.RefreshControl, {
+            refreshing: this.state.refreshing,
+            onRefresh: this._onRefresh.bind(this),
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 138
+            }
+          }),
           keyExtractor: this._keyExtractor,
           style: styles.root,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 92
+            lineNumber: 136
           }
         });
       }
@@ -83891,21 +83960,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
     };
   });
 
-  function isEmpty(obj) {
-    if (obj == null) return true;
-    if (obj.length > 0) return false;
-    if (obj.length === 0) return true;
-    if (typeof obj !== "object") return true;
-
-    for (var key in obj) {
-      if (hasOwnProperty.call(obj, key)) return false;
-    }
-
-    return true;
-  }
-
   var mapStateToProps = function mapStateToProps(state) {
-    if (!isEmpty(state.serReducer.dataInfo)) return {
+    if (!_lodash2.default.isEmpty(state.serReducer.dataInfo)) return {
       dataActicles: state.serReducer.dataInfo
     };
     return {
@@ -83917,18 +83973,12 @@ __d(function (global, require, module, exports, _dependencyMap) {
     return {
       fetchData: function fetchData(data) {
         return dispatch((0, _fetchData.fetchDataArticles)(data));
-      },
-      send: function send() {
-        return dispatch({
-          type: 'SET_VISIBILITY_FILTER',
-          filter: 'SHOW_COMPLETED'
-        });
       }
     };
   };
 
   exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(HomeScreen);
-},640,[108,175,12,551,602,554,630,633,597,641],"Swastika/app/screens/home/HomeScreen.js");
+},640,[108,175,12,551,602,554,630,633,597,637,641],"Swastika/app/screens/home/HomeScreen.js");
 __d(function (global, require, module, exports, _dependencyMap) {
     ;
 

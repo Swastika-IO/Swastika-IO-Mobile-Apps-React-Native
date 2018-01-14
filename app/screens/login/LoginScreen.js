@@ -131,8 +131,8 @@ let styles = RkStyleSheet.create(theme => ({
     },
     form: {
         flex: 1,
-        marginLeft: 20,
-        marginRight: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },

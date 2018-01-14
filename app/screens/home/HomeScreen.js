@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   View,
+  RefreshControl,
   TouchableOpacity
 } from 'react-native';
 import {
@@ -14,6 +15,9 @@ import _ from 'lodash'
 import { getServiceSelector } from '../../data/store/DataProvider';
 import { fetchDataArticles } from "../../action/fetch-data/fetch-data";
 import { SocialBar } from '../../components/socialBar';
+import { HOST } from '../../utils/APIConfig';
+import { loadData, saveData, storage } from '../../data/store/DataProvider'
+
 let moment = require('moment');
 
 export class HomeScreen extends React.Component {
@@ -23,28 +27,62 @@ export class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.data = [{
-      id: '1',
-      image: '',
-      title: '',
-      time: '',
-      seoDescription: ''
-    }, {
-      id: '2',
-      image: '',
-      title: '',
-      time: '',
-      seoDescription: ''
-    }]
+
+    this.state = {
+      refreshing: false,
+    };
+    this.data = null;
+
+
+    // loadData('acticle').then((act) => {
+    //   console.log("load ccuess ")
+
+    //   console.log(JSON.stringify(act));
+    //   this.data = act
+    // });
+
+
     this.renderItem = this._renderItem.bind(this);
+    
   }
 
   componentDidMount() {
-    this.props.fetchData({ data: '134' })
+    this._onRefresh();
+
+    // load
+    storage.load({
+      key: 'acticle'
+    }).then(ret => {
+      // found data goes to then()
+      this.data = ret
+      this.forceUpdate()
+    }).catch(err => {
+      switch (err.name) {
+        case 'NotFoundError':
+          // TODO;
+          break;
+        case 'ExpiredError':
+          // TODO
+          break;
+      }
+    });
   }
 
-  reloadData(data) {
-    this.data = data;
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.props.fetchData()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dataActicles } = nextProps;
+    if (dataActicles) {
+      const { isSucceed, data } = dataActicles;
+      if (isSucceed) {
+        console.log("save ccuess " + data.items)
+        saveData('acticle', data.items)
+      }
+      this.setState({ refreshing: false });
+    }
   }
 
   _keyExtractor(post, index) {
@@ -52,11 +90,10 @@ export class HomeScreen extends React.Component {
   }
 
   converImageURL(image) {
-    return 'https://swastika.io' + image
+    return HOST + image
   }
 
   _renderItem(info) {
-    console.log("indeo  " + JSON.stringify(info));
     return (
       <TouchableOpacity
         delayPressIn={70}
@@ -81,7 +118,6 @@ export class HomeScreen extends React.Component {
 
   render() {
     const { dataActicles } = this.props;
-    console.log("dataActicles  " + dataActicles)
     if (dataActicles) {
       const { isSucceed, data } = dataActicles;
       if (isSucceed) {
@@ -91,6 +127,10 @@ export class HomeScreen extends React.Component {
     return (
       <FlatList data={this.data}
         renderItem={this.renderItem}
+        refreshControl={<RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh.bind(this)}
+        />}
         keyExtractor={this._keyExtractor}
         style={styles.root} />
 
@@ -111,33 +151,8 @@ let styles = RkStyleSheet.create(theme => ({
 }));
 
 
-function isEmpty(obj) {
-
-  // null and undefined are "empty"
-  if (obj == null) return true;
-
-  // Assume if it has a length property with a non-zero value
-  // that that property is correct.
-  if (obj.length > 0) return false;
-  if (obj.length === 0) return true;
-
-  // If it isn't an object at this point
-  // it is empty, but it can't be anything *but* empty
-  // Is it empty?  Depends on your application.
-  if (typeof obj !== "object") return true;
-
-  // Otherwise, does it have any properties of its own?
-  // Note that this doesn't handle
-  // toString and valueOf enumeration bugs in IE < 9
-  for (var key in obj) {
-    if (hasOwnProperty.call(obj, key)) return false;
-  }
-
-  return true;
-}
-
 const mapStateToProps = (state) => {
-  if (!isEmpty(state.serReducer.dataInfo))
+  if (!_.isEmpty(state.serReducer.dataInfo))
     return {
       dataActicles: state.serReducer.dataInfo
     }
@@ -148,10 +163,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => (
   {
     fetchData: (data) => dispatch(fetchDataArticles(data)),
-    send: () => dispatch({
-      type: 'SET_VISIBILITY_FILTER',
-      filter: 'SHOW_COMPLETED'
-    }),
   }
 );
 
