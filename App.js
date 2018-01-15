@@ -40,6 +40,9 @@ const KittenApp = StackNavigator({
   },
   Home: {
     screen: HomeScreen
+  },
+  Detail: {
+    screen: Screens.ArticleDetails
   }
   // Home: {
   //   screen: DrawerNavigator({
@@ -52,10 +55,10 @@ const KittenApp = StackNavigator({
   //       contentComponent: (props) => <SideMenu {...props}/>
   //     })
   // }
-}, 
-// {
-//     headerMode: 'none',
-//   }
+},
+  // {
+  //     headerMode: 'none',
+  //   }
 );
 
 

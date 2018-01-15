@@ -4,6 +4,7 @@ import {
   Image,
   View,
   RefreshControl,
+  ActivityIndicator,
   TouchableOpacity
 } from 'react-native';
 import {
@@ -12,11 +13,10 @@ import {
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
 import _ from 'lodash'
-import { getServiceSelector } from '../../data/store/DataProvider';
 import { fetchDataArticles } from "../../action/fetch-data/fetch-data";
 import { SocialBar } from '../../components/socialBar';
 import { HOST } from '../../utils/APIConfig';
-import { loadData, saveData, storage } from '../../data/store/DataProvider'
+import { loadData, saveData, loadDataSync } from '../../data/store/DataProvider'
 
 let moment = require('moment');
 
@@ -27,67 +27,76 @@ export class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
+      pageSize: 3,
+      pageIndex: 0,
+      loadmore: false,
       refreshing: false,
     };
     this.data = null;
-
-
-    // loadData('acticle').then((act) => {
-    //   console.log("load ccuess ")
-
-    //   console.log(JSON.stringify(act));
-    //   this.data = act
-    // });
-
-
     this.renderItem = this._renderItem.bind(this);
-    
   }
 
   componentDidMount() {
     this._onRefresh();
+    loadDataSync(this.onLoadedSuccess, 'acticle')
+  }
 
-    // load
-    storage.load({
-      key: 'acticle'
-    }).then(ret => {
-      // found data goes to then()
-      this.data = ret
-      this.forceUpdate()
-    }).catch(err => {
-      switch (err.name) {
-        case 'NotFoundError':
-          // TODO;
-          break;
-        case 'ExpiredError':
-          // TODO
-          break;
-      }
-    });
+  onLoadedSuccess = (items) => {
+    this.data = items
+    this.forceUpdate()
   }
 
   _onRefresh() {
     this.setState({ refreshing: true });
-    this.props.fetchData()
+    this.props.fetchData({ pageIndex: 0, pageSize: this.state.pageSize })
   }
 
   componentWillReceiveProps(nextProps) {
     const { dataActicles } = nextProps;
+    var increateIndex = this.state.pageIndex
     if (dataActicles) {
       const { isSucceed, data } = dataActicles;
       if (isSucceed) {
-        console.log("save ccuess " + data.items)
-        saveData('acticle', data.items)
+        const { pageIndex, items } = data
+        if (pageIndex == 0)
+          saveData('acticle', data.items)
+        this.data = pageIndex === 0 ? items : [...this.data, ...items];
+        if (items.length > 0) {
+          increateIndex = pageIndex + 1
+        }
       }
-      this.setState({ refreshing: false });
+      this.setState({ loadmore: false, refreshing: false, pageIndex: increateIndex });
     }
   }
+
+  renderFooter = () => {
+    if (!this.state.loadmore) return null;
+
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
 
   _keyExtractor(post, index) {
     return post.id;
   }
+
+  _onEndReached = (info) => {
+    if (!this.state.loadmore) {
+      this.setState({ loadmore: true });
+      this.props.fetchData({ pageIndex: this.state.pageIndex, pageSize: this.state.pageSize })
+    }
+  };
 
   converImageURL(image) {
     return HOST + image
@@ -98,7 +107,7 @@ export class HomeScreen extends React.Component {
       <TouchableOpacity
         delayPressIn={70}
         activeOpacity={0.8}
-        onPress={() => this.props.navigation.navigate('Article', { id: info.item.id })}>
+        onPress={() => this.props.navigation.navigate('Detail', { dataArticle: info.item })}>
         <RkCard rkType='backImg'>
           <Image rkCardImg source={{
             uri: this.converImageURL(info.item.image),
@@ -106,10 +115,10 @@ export class HomeScreen extends React.Component {
           }} />
           <View rkCardImgOverlay rkCardContent style={styles.overlay}>
             <RkText rkType='header2 inverseColor'>{info.item.title}</RkText>
-            <RkText rkType='secondary2 inverseColor'>{moment().add(-300, 'seconds').fromNow()}</RkText>
-            <View rkCardFooter style={styles.footer}>
+            <RkText rkType='secondary2 inverseColor'>{moment().utc(info.item.createdDateTime).fromNow()}</RkText>
+            {/* <View rkCardFooter style={styles.footer}>
               <SocialBar rkType='leftAligned' />
-            </View >
+            </View > */}
           </View>
         </RkCard>
       </TouchableOpacity>
@@ -117,16 +126,12 @@ export class HomeScreen extends React.Component {
   }
 
   render() {
-    const { dataActicles } = this.props;
-    if (dataActicles) {
-      const { isSucceed, data } = dataActicles;
-      if (isSucceed) {
-        this.data = data.items;
-      }
-    }
     return (
       <FlatList data={this.data}
         renderItem={this.renderItem}
+        ListFooterComponent={this.renderFooter}
+        onEndReachedThreshold={0.001}
+        onEndReached={this._onEndReached}
         refreshControl={<RefreshControl
           refreshing={this.state.refreshing}
           onRefresh={this._onRefresh.bind(this)}
@@ -140,7 +145,8 @@ export class HomeScreen extends React.Component {
 
 let styles = RkStyleSheet.create(theme => ({
   root: {
-    backgroundColor: theme.colors.screen.base
+    backgroundColor: theme.colors.screen.base,
+    flex: 1
   },
   overlay: {
     justifyContent: 'flex-end',

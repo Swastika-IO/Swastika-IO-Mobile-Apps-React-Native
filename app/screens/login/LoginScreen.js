@@ -16,7 +16,6 @@ import {
 import { connect } from "react-redux";
 import { GradientButton } from '../../components/';
 import PropTypes from "prop-types";
-import { getServiceSelector } from '../../data/store/DataProvider';
 import { fetchData } from "../../action/fetch-data/fetch-data";
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 import { UserInfo } from '../../data/userProfile/UserProfile'
@@ -148,7 +147,7 @@ let styles = RkStyleSheet.create(theme => ({
     }
 }));
 
-const mapStateToProps = (state) => getServiceSelector(state);
+const mapStateToProps = (state) => { return state };
 const mapDispatchToProps = (dispatch) => (
     {
         fetchData: (data) => dispatch(fetchData(data)),

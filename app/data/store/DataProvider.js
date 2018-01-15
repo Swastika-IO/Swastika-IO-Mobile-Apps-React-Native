@@ -35,7 +35,7 @@ export function saveData(keyStore, dataSave) {
     });
 }
 
-export const loadData = (keyStore) => (
+export function loadDataSync(onLoaded, keyStore) {
     storage.load({
         key: keyStore,
 
@@ -51,8 +51,7 @@ export const loadData = (keyStore) => (
         // // you can pass extra params to sync method
         // // see sync example below for example
     }).then(data => {
-        // found data go to then()
-        data
+        onLoaded(data)
     }).catch(err => {
         // any exception including data not found 
         // goes to catch()
@@ -66,14 +65,13 @@ export const loadData = (keyStore) => (
                 break;
         }
     })
-);
+}
+
 const initialState = {
     dataInfo: {},
     isLoading: false,
     error: false,
 };
-
-export const getServiceSelector = (state) => ({ ...state });
 
 const serviceReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -105,38 +103,38 @@ const serviceReducer = (state = initialState, action) => {
 };
 
 
-function visibilityFilter(state = 'SHOW_ALL', action) {
-    switch (action.type) {
-        case 'SET_VISIBILITY_FILTER':
-            return action.filter
-        default:
-            return state
-    }
-}
+// function visibilityFilter(state = 'SHOW_ALL', action) {
+//     switch (action.type) {
+//         case 'SET_VISIBILITY_FILTER':
+//             return action.filter
+//         default:
+//             return state
+//     }
+// }
 
-function todos(state = [], action) {
-    switch (action.type) {
-        case 'ADD_TODO':
-            return [
-                ...state,
-                {
-                    text: action.text,
-                    completed: false
-                }
-            ]
-        case 'COMPLETE_TODO':
-            return state.map((todo, index) => {
-                if (index === action.index) {
-                    return Object.assign({}, todo, {
-                        completed: true
-                    })
-                }
-                return todo
-            })
-        default:
-            return state
-    }
-}
-const reducer = combineReducers({ visibilityFilter, todos, serReducer: serviceReducer })
+// function todos(state = [], action) {
+//     switch (action.type) {
+//         case 'ADD_TODO':
+//             return [
+//                 ...state,
+//                 {
+//                     text: action.text,
+//                     completed: false
+//                 }
+//             ]
+//         case 'COMPLETE_TODO':
+//             return state.map((todo, index) => {
+//                 if (index === action.index) {
+//                     return Object.assign({}, todo, {
+//                         completed: true
+//                     })
+//                 }
+//                 return todo
+//             })
+//         default:
+//             return state
+//     }
+// }
+const reducer = combineReducers({ serReducer: serviceReducer })
 
 export default reducer; 

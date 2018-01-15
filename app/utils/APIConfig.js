@@ -3,5 +3,6 @@
 export const HOST = 'https://swastika.io';
 
 export default {
-  ARTICLES_URL: `${HOST}/api/vi-vn/articles/5/0`,
 };
+
+export const ARTICLES_URL = (pageSize, pageIndex) => { return `${HOST}/api/vi-vn/articles/${pageSize}/${pageIndex}` };

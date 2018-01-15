@@ -2,7 +2,7 @@
 import { fetchDataError } from './fetch-data-error';
 import { fetchDataRequest } from './fetch-data-request';
 import { fetchDataSuccess } from './fetch-data-success';
-import config from '../../utils/APIConfig';
+import config, { ARTICLES_URL } from '../../utils/APIConfig';
 
 
 export const fetchData = (data) => ((dispatch) => {
@@ -16,7 +16,7 @@ export const fetchData = (data) => ((dispatch) => {
 
 export const fetchDataArticles = (data) => ((dispatch) => {
   dispatch(fetchDataRequest());
-  return fetch(config.ARTICLES_URL)
+  return fetch(ARTICLES_URL(data.pageSize + "", data.pageIndex + ""))
     .then((res) => res.json())
     .then((dataInfo) => dispatch(fetchDataSuccess(dataInfo)))
     .catch((err) => err);
