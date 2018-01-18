@@ -5,13 +5,14 @@ import {
   View,
   TouchableOpacity
 } from 'react-native';
+import { connect } from "react-redux";
 import {
   RkCard,
   RkText,
   RkStyleSheet
 } from 'react-native-ui-kitten';
 import { Avatar } from '../../components';
-import { HOST } from '../../utils/APIConfig';
+import { HOST } from '../../config/APIConfig';
 import { SocialBar } from '../../components';
 let moment = require('moment');
 
@@ -73,3 +74,5 @@ let styles = RkStyleSheet.create(theme => ({
     marginBottom: 5
   },
 }));
+
+export default connect()(ArticleDetails);

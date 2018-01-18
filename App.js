@@ -4,18 +4,12 @@ import {
   StackNavigator
 } from 'react-navigation';
 import { withRkTheme } from 'react-native-ui-kitten';
-import * as Screens from './app/screens';
-import LoginScreen from './app/screens/login/LoginScreen';
-import HomeScreen from './app/screens/home/HomeScreen';
+import { RootRoutes } from './app/config/routes'
 import logger from "redux-logger";
 import { bootstrap } from './app/config/bootstrap';
-import { applyMiddleware, createStore } from "redux";
-import Reducer from "./app/data/store/DataProvider";
 import { Provider } from "react-redux";
-import configureStore from './app/utils/configureStore';
-
-
-const store = configureStore({});
+import configureStore from './app/store/configureStore';
+import AppWithNavigationState from './app/containers/AppNavigator';
 
 bootstrap();
 
@@ -30,45 +24,30 @@ function getCurrentRouteName(navigationState) {
   return route.routeName;
 }
 
+
 //let SideMenu = withRkTheme(Screens.SideMenu);
-const KittenApp = StackNavigator({
-  Splash: {
-    screen: Screens.SplashScreen
-  },
-  Login: {
-    screen: LoginScreen
-  },
-  Home: {
-    screen: HomeScreen
-  },
-  Detail: {
-    screen: Screens.ArticleDetails
+// const KittenApp = StackNavigator({
+//   Splash: {
+//     screen: SplashScreen,
+//   }, ...RootRoutes
+// },
+// {
+//     headerMode: 'none',
+//   }
+// );
+
+class ReduxExampleApp extends React.Component {
+  store = configureStore({});
+
+  render() {
+    return (
+      <Provider store={this.store}>
+        <AppWithNavigationState />
+      </Provider>
+    );
   }
-  // Home: {
-  //   screen: DrawerNavigator({
-  //       ...AppRoutes,
-  //     },
-  //     {
-  //       drawerOpenRoute: 'DrawerOpen',
-  //       drawerCloseRoute: 'DrawerClose',
-  //       drawerToggleRoute: 'DrawerToggle',
-  //       contentComponent: (props) => <SideMenu {...props}/>
-  //     })
-  // }
-},
-  // {
-  //     headerMode: 'none',
-  //   }
-);
+}
 
 
-export default () => (
-  <Provider store={store}>
-    <KittenApp
-      onNavigationStateChange={(prevState, currentState) => {
-        const currentScreen = getCurrentRouteName(currentState);
-        const prevScreen = getCurrentRouteName(prevState);
-      }}
-    />
-  </Provider>
-);
+export default ReduxExampleApp;
+

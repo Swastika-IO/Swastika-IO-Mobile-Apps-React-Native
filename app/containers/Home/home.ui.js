@@ -13,9 +13,10 @@ import {
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
 import _ from 'lodash'
+import { RootRoutes } from '../../config/routes'
 import { fetchDataArticles } from "../../action/fetch-data/fetch-data";
 import { SocialBar } from '../../components/socialBar';
-import { HOST } from '../../utils/APIConfig';
+import { HOST } from '../../config/APIConfig';
 import { loadData, saveData, loadDataSync } from '../../data/store/DataProvider'
 
 let moment = require('moment');
@@ -107,7 +108,7 @@ export class HomeScreen extends React.Component {
       <TouchableOpacity
         delayPressIn={70}
         activeOpacity={0.8}
-        onPress={() => this.props.navigation.navigate('Detail', { dataArticle: info.item })}>
+        onPress={() => this.props.navigation.navigate(RootRoutes.ArticleDetail.screen.toString(), { dataArticle: info.item })}>
         <RkCard rkType='backImg'>
           <Image rkCardImg source={{
             uri: this.converImageURL(info.item.image),

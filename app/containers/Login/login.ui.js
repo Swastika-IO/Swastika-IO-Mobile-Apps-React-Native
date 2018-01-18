@@ -14,6 +14,7 @@ import {
     RkTheme
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
+import { RootRoutes } from '../../config/routes'
 import { GradientButton } from '../../components/';
 import PropTypes from "prop-types";
 import { fetchData } from "../../action/fetch-data/fetch-data";
@@ -35,7 +36,7 @@ class LoginScreen extends React.Component {
 
     submitLogin() {
 
-        this.props.navigation.navigate('Home')
+        this.props.navigation.navigate(RootRoutes.Home.screen.toString())
         // let example = {
         //     username: "Mark",
         //     password: "Galea"

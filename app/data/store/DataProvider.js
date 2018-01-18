@@ -1,6 +1,5 @@
 import Storage from 'react-native-storage';
 import { AsyncStorage } from 'react-native';
-import { combineReducers } from "redux";
 
 export let storage = new Storage({
     // maximum capacity, default 1000 
@@ -73,7 +72,7 @@ const initialState = {
     error: false,
 };
 
-const serviceReducer = (state = initialState, action) => {
+export const serviceReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'FETCH_DATA_SUCCESS': {
             return {
@@ -135,6 +134,3 @@ const serviceReducer = (state = initialState, action) => {
 //             return state
 //     }
 // }
-const reducer = combineReducers({ serReducer: serviceReducer })
-
-export default reducer; 

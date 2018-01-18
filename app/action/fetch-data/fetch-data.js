@@ -2,7 +2,7 @@
 import { fetchDataError } from './fetch-data-error';
 import { fetchDataRequest } from './fetch-data-request';
 import { fetchDataSuccess } from './fetch-data-success';
-import config, { ARTICLES_URL } from '../../utils/APIConfig';
+import config, { ARTICLES_URL } from '../../config/APIConfig';
 
 
 export const fetchData = (data) => ((dispatch) => {
