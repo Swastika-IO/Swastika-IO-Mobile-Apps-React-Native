@@ -6,7 +6,7 @@ import { AppNavigator } from './AppNavigator';
 // Start with two routes: The Main screen, with the Login screen on top.
 const firstAction = AppNavigator.router.getActionForPathAndParams(RootRoutes.Splash.name);
 const tempNavState = AppNavigator.router.getStateForAction(firstAction);
-const secondAction = AppNavigator.router.getActionForPathAndParams(RootRoutes.Login.name);
+const secondAction = AppNavigator.router.getActionForPathAndParams(RootRoutes.Home.name);
 const initialNavState = AppNavigator.router.getStateForAction(
     secondAction,
     tempNavState
@@ -15,12 +15,12 @@ const initialNavState = AppNavigator.router.getStateForAction(
 export function nav(state = initialNavState, action) {
     let nextState;
     switch (action.type) {
-        case 'Login':
-            nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.back(),
-                state
-            );
-            break;
+        // case 'Login':
+        //     nextState = AppNavigator.router.getStateForAction(
+        //         NavigationActions.back(),
+        //         state
+        //     );
+        //     break;
         case 'Logout':
             nextState = AppNavigator.router.getStateForAction(
                 NavigationActions.navigate({ routeName:RootRoutes.Login.name }),

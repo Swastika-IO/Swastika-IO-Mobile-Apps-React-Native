@@ -13,7 +13,8 @@ import {
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
 import _ from 'lodash'
-import { RootRoutes } from '../../config/routes'
+import RootRoutes  from '../../config/routes'
+import { NavigationActions } from 'react-navigation';
 import { fetchDataArticles } from "../../action/fetch-data/fetch-data";
 import { SocialBar } from '../../components/socialBar';
 import { HOST } from '../../config/APIConfig';
@@ -108,7 +109,7 @@ export class HomeScreen extends React.Component {
       <TouchableOpacity
         delayPressIn={70}
         activeOpacity={0.8}
-        onPress={() => this.props.navigation.navigate(RootRoutes.ArticleDetail.screen.toString(), { dataArticle: info.item })}>
+        onPress={() => this.props.openArticleDetail({ dataArticle: info.item })}>
         <RkCard rkType='backImg'>
           <Image rkCardImg source={{
             uri: this.converImageURL(info.item.image),
@@ -159,9 +160,9 @@ let styles = RkStyleSheet.create(theme => ({
 
 
 const mapStateToProps = (state) => {
-  if (!_.isEmpty(state.serReducer.dataInfo))
+  if (!_.isEmpty(state.serviceReducer.dataInfo))
     return {
-      dataActicles: state.serReducer.dataInfo
+      dataActicles: state.serviceReducer.dataInfo
     }
   return {
     dataActicles: null
@@ -169,6 +170,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => (
   {
+    openArticleDetail: (param) => dispatch(NavigationActions.navigate({ routeName: RootRoutes.ArticleDetail.name }, param)),
     fetchData: (data) => dispatch(fetchDataArticles(data)),
   }
 );

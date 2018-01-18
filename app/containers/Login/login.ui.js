@@ -14,7 +14,8 @@ import {
     RkTheme
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
-import { RootRoutes } from '../../config/routes'
+import { NavigationActions } from 'react-navigation';
+import RootRoutes from '../../config/routes'
 import { GradientButton } from '../../components/';
 import PropTypes from "prop-types";
 import { fetchData } from "../../action/fetch-data/fetch-data";
@@ -35,8 +36,8 @@ class LoginScreen extends React.Component {
     }
 
     submitLogin() {
-
-        this.props.navigation.navigate(RootRoutes.Home.screen.toString())
+        this.props.openHome();
+        // this.props.navigation.navigate(RootRoutes.Home.screen.toString())
         // let example = {
         //     username: "Mark",
         //     password: "Galea"
@@ -148,9 +149,12 @@ let styles = RkStyleSheet.create(theme => ({
     }
 }));
 
-const mapStateToProps = (state) => { return state };
+const mapStateToProps = state => ({ 
+    isLoggedIn: state.auth.isLoggedIn
+});
 const mapDispatchToProps = (dispatch) => (
     {
+        openHome:() => dispatch(NavigationActions.navigate({ routeName: RootRoutes.Home.name })),
         fetchData: (data) => dispatch(fetchData(data)),
         send: () => dispatch({
             type: 'SET_VISIBILITY_FILTER',
@@ -159,5 +163,9 @@ const mapDispatchToProps = (dispatch) => (
     }
 );
 
+LoginScreen.propTypes = {
+    isLoggedIn: PropTypes.bool.isRequired,
+  };
 
+  
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
