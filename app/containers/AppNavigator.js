@@ -20,6 +20,7 @@ export const AppNavigator = StackNavigator({
   Login: { screen: paramsToProps(RootRoutes.Login.screen) },
   Splash: { screen: paramsToProps(RootRoutes.Splash.screen) },
   Home: { screen: paramsToProps(RootRoutes.Home.screen) },
+  Mycustome: { screen: paramsToProps(RootRoutes.Mycustome.screen) },
   ArticleDetail: { screen: paramsToProps(RootRoutes.ArticleDetail.screen) }
 }, {
     headerMode: 'none',
