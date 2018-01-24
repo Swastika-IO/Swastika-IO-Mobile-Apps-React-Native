@@ -103,52 +103,53 @@ function parserStyle(strStyle) {
     return newStyle;
 }
 
+var dataUser;
 //swastika.io
 var jsonData
-// = [{
-//     "componentType": "View",
-//     "styleName": "page-header page-header-small",
-//     "id": "1",
-//     "dataType": "Component",
-//     "dataSource": [
-//         {
-//             "componentType": "View",
-//             "styleName": "page-header-image",
-//             "id": "2",
-//             "dataType": "background",
-//             "dataSource": "/images/thumbs/2016/01/dia-sau-galfer-size-zin-yamaha-exciter-150-216-slide-products-56a304d05c030.JPG"
-//         }, {
-//             "componentType": "View",
-//             "styleName": "content-center",
-//             "dataType": "Component",
-//             "id": "3",
-//             "dataSource": [{
-//                 "componentType": "View",
-//                 "id": "4",
-//                 "styleName": "row",
-//                 "dataType": "Component",
-//                 "dataSource": [{
-//                     "componentType": "View",
-//                     "styleName": "col-md",
-//                     "dataType": "Component",
-//                     "id": "5",
-//                     "dataSource": [{
-//                         "componentType": "Text",
-//                         "styleName": "title",
-//                         "id": "6",
-//                         "dataType": "String",
-//                         "dataSource": "Simpler. Smarter. Faster."
-//                     }, {
-//                         "componentType": "Text",
-//                         "styleName": "title",
-//                         "id": "7",
-//                         "dataType": "String",
-//                         "dataSource": "The CloudCheckr Cloud Management Platform (CMP) provides full visibility and control to reduce costs, improve cybersecurity posture, and automate critical tasks."
-//                     }]
-//                 }]
-//             }]
-//         }]
-// }]
+= [{
+    "componentType": "View",
+    "styleName": "page-header page-header-small",
+    "id": "1",
+    "dataType": "Component",
+    "dataSource": [
+        {
+            "componentType": "View",
+            "styleName": "page-header-image",
+            "id": "2",
+            "dataType": "background",
+            "dataSource": "/images/thumbs/2016/01/dia-sau-galfer-size-zin-yamaha-exciter-150-216-slide-products-56a304d05c030.JPG"
+        }, {
+            "componentType": "View",
+            "styleName": "content-center",
+            "dataType": "Component",
+            "id": "3",
+            "dataSource": [{
+                "componentType": "View",
+                "id": "4",
+                "styleName": "row",
+                "dataType": "Component",
+                "dataSource": [{
+                    "componentType": "View",
+                    "styleName": "col-md",
+                    "dataType": "Component",
+                    "id": "5",
+                    "dataSource": [{
+                        "componentType": "Text",
+                        "styleName": "title",
+                        "id": "6",
+                        "dataType": "String",
+                        "dataSource": "Simpler. Smarter. Faster."
+                    }, {
+                        "componentType": "Text",
+                        "styleName": "title",
+                        "id": "7",
+                        "dataType": "String",
+                        "dataSource": "The CloudCheckr Cloud Management Platform (CMP) provides full visibility and control to reduce costs, improve cybersecurity posture, and automate critical tasks."
+                    }]
+                }]
+            }]
+        }]
+}]
 
 function getListStylesByStyleName(listStyleName) {
     let arrStyle = [];
