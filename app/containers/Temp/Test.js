@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator } from 'react-native';
-import RNC from 'react-native-css';
+import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { vw, vh, vmin, vmax, getPercentWidth, getPercentHeight } from '../../utils/scale'
 
-var HOST = 'http://shop2banh.vn'
+var HOST = 'https://aamboceanservice.blob.core.windows.net'
 //min-height = minHeight
 //max-height = maxHeight
 //min-width = minWidth
@@ -206,19 +205,25 @@ export class MyScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoading: true
+            isLoading: true,
+            refreshing: false
         }
     }
 
+    _onRefresh() {
+        this.setState({ refreshing: true });
+        this.getDataJson();
+    }
+
     async getDataJson() {
-        var swasitkaData = await fetch("http://swastika.io/api/vi-vn/module/details/backend/9")
+        var swasitkaData = await fetch("https://swastika.io/api/vi-vn/module/details/backend/9")
         let responseJson = await swasitkaData.json();
-        var content = responseJson.data.view.mobileStyle;
+        var content = responseJson.data.view.mobileView;
         // var styleData = JSON.parse(content.replace("\"", '').replace("\n", '').replace("\r", ''));
         jsonData = content.componentData;
         var dataStyle = parserStyle(content.styleData);
         styleBootstrap = StyleSheet.create(dataStyle)
-        this.setState({ isLoading: false })
+        this.setState({ isLoading: false, refreshing: false })
     }
 
     componentDidMount() {
@@ -228,7 +233,13 @@ export class MyScreen extends React.Component {
         if (!this.state.isLoading) {
             const data = jsonData
             return (
-                generateTag(data)
+                <ScrollView style={{ flex: 1 }} refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh.bind(this)}
+                    />}>
+                    {generateTag(data)}
+                </ScrollView>
             )
         } else {
             return (
