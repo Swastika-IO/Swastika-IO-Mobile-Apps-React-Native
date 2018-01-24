@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, ScrollView, Image } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator } from 'react-native';
 import RNC from 'react-native-css';
 import { vw, vh, vmin, vmax, getPercentWidth, getPercentHeight } from '../../utils/scale'
 
@@ -232,7 +232,9 @@ export class MyScreen extends React.Component {
             )
         } else {
             return (
-                <View />
+                <View >
+                    <ActivityIndicator size="large" color="#0000ff" />
+                </View>
             )
         }
     }
