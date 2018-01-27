@@ -181,33 +181,36 @@ export class MyScreen extends React.Component {
             isLoading: true,
             refreshing: false
         }
+        this.ComponentType = Swastika.ComponentType;
     }
 
     generateTag = (data) => {
         let Arr = (data).map((entry, i) => {
-            if (entry.componentType == 'View') {
-                if (entry.dataType == 'background') {
-                    return <Swastika.CustomImage key={i + 'CustomImage'}
+            switch (entry.ComponentType) {
+                case this.ComponentType.View:
+                    if (entry.dataType == 'background') {
+                        return <Swastika.CustomImage key={i + 'CustomImage'}
+                            generateTag={this.generateTag}
+                            getListStylesByStyleName={this.getListStylesByStyleName}
+                            id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
+                            dataSource={entry.dataSource} dataType={entry.dataType} />
+                    } else {
+                        return <Swastika.CustomView key={i + 'CustomView'}
+                            generateTag={this.generateTag}
+                            getListStylesByStyleName={this.getListStylesByStyleName}
+                            id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
+                            dataSource={entry.dataSource} dataType={entry.dataType} />
+                    }
+                case this.ComponentType.Text:
+                    return <Swastika.CustomText key={i + 'CustomText'}
                         generateTag={this.generateTag}
                         getListStylesByStyleName={this.getListStylesByStyleName}
                         id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                         dataSource={entry.dataSource} dataType={entry.dataType} />
-                } else {
-                    return <Swastika.CustomView key={i + 'CustomView'}
-                        generateTag={this.generateTag}
-                        getListStylesByStyleName={this.getListStylesByStyleName}
-                        id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
-                        dataSource={entry.dataSource} dataType={entry.dataType} />
-                }
-            } else if (entry.componentType == 'Text') {
-                return <Swastika.CustomText key={i + 'CustomText'}
-                    generateTag={this.generateTag}
-                    getListStylesByStyleName={this.getListStylesByStyleName}
-                    id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
-                    dataSource={entry.dataSource} dataType={entry.dataType} />
+                default:
+                    return <View />
             }
         })
-
         return Arr;
     }
 
