@@ -137,3 +137,117 @@ export class CustomImage extends React.Component {
         );
     }
 }
+
+
+const temp = {
+    "componentType": "View",
+    "styleName": "about-description text-center",
+    "id": 1,
+    "dataType": "component",
+    "dataValue": null,
+    "dataSource": [
+        {
+            "componentType": "View",
+            "styleName": "features-3",
+            "id": 2,
+            "dataType": "component",
+            "dataValue": null,
+            "dataSource": [
+                {
+                    "componentType": "View",
+                    "styleName": "container",
+                    "id": 8,
+                    "dataType": "component",
+                    "dataValue": null,
+                    "dataSource": [
+                        {
+                            "componentType": "View",
+                            "styleName": "row",
+                            "id": 3,
+                            "dataType": "component",
+                            "dataValue": null,
+                            "dataSource": [
+                                {
+                                    "componentType": "Text_header2",
+                                    "styleName": "title",
+                                    "id": 1,
+                                    "dataType": "object",
+                                    "dataValue": "@Model.title",
+                                    "dataSource": []
+                                },
+                                {
+                                    "componentType": "Text_header4",
+                                    "styleName": "description",
+                                    "id": 2,
+                                    "dataType": "object",
+                                    "dataValue": "description",
+                                    "dataSource": []
+                                }
+                            ]
+                        },
+                        {
+                            "componentType": "View",
+                            "styleName": "row",
+                            "id": 4,
+                            "dataType": "object_array",
+                            "dataValue": "Model.Data.Items",
+                            "dataSource": [
+                                {
+                                    "componentType": "View",
+                                    "styleName": "col-md-4",
+                                    "id": 5,
+                                    "dataType": "component",
+                                    "dataValue": null,
+                                    "dataSource": [
+                                        {
+                                            "componentType": "View",
+                                            "styleName": "info info-hover",
+                                            "id": 6,
+                                            "dataType": "component",
+                                            "dataValue": null,
+                                            "dataSource": [
+                                                {
+                                                    "componentType": "View",
+                                                    "styleName": "icon icon-success icon-circle",
+                                                    "id": 7,
+                                                    "dataType": "component",
+                                                    "dataValue": null,
+                                                    "dataSource": [
+                                                        {
+                                                            "componentType": "Image",
+                                                            "styleName": "now-ui-icons",
+                                                            "id": 6,
+                                                            "dataType": "image_assets",
+                                                            "dataValue": "../../assets/icons/iconPlus.png",
+                                                            "dataSource": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "componentType": "Text_header4",
+                                                    "styleName": "info-title",
+                                                    "id": 5,
+                                                    "dataType": "object",
+                                                    "dataValue": "title",
+                                                    "dataSource": []
+                                                },
+                                                {
+                                                    "componentType": "Text",
+                                                    "styleName": "description",
+                                                    "id": 5,
+                                                    "dataType": "object",
+                                                    "dataValue": "excerpt",
+                                                    "dataSource": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

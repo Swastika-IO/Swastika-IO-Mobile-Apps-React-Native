@@ -229,7 +229,7 @@ export class MyScreen extends React.Component {
     }
 
     async getDataJson() {
-        var swasitkaData = await fetch("https://swastika.io/api/vi-vn/module/details/backend/9")
+        var swasitkaData = await fetch("https://swastika.io/api/vi-vn/module/details/3")
         let responseJson = await swasitkaData.json();
         var content = responseJson.data.view.mobileView;
         jsonData = content.componentData;
