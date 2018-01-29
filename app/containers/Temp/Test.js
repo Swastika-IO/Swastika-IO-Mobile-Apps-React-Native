@@ -20,7 +20,7 @@ import * as Swastika from '../../components/swastika'
 // margin-right = marginRight
 // margin-right = marginRight
 
-var dataStyle
+
 //  = {
 //     'page-headerpage-header-small': {
 //         'minHeight': '60vh',
@@ -68,8 +68,6 @@ var dataStyle
 //     }
 // }
 
-var styleBootstrap;
-
 function parserStyle(strStyle) {
     var newStyle = {};
     var characters = Object.keys(strStyle);
@@ -103,55 +101,57 @@ function parserStyle(strStyle) {
     return newStyle;
 }
 
-var dataUser;
-//swastika.io
-var jsonData
-// = [{
-//     "componentType": "View",
-//     "styleName": "page-header page-header-small",
-//     "id": "1",
-//     "dataType": "Component",
-//     "dataSource": [
-//         {
-//             "componentType": "View",
-//             "styleName": "page-header-image",
-//             "id": "2",
-//             "dataType": "background",
-//             "dataSource": "/images/thumbs/2016/01/dia-sau-galfer-size-zin-yamaha-exciter-150-216-slide-products-56a304d05c030.JPG"
-//         }, {
-//             "componentType": "View",
-//             "styleName": "content-center",
-//             "dataType": "Component",
-//             "id": "3",
-//             "dataSource": [{
-//                 "componentType": "View",
-//                 "id": "4",
-//                 "styleName": "row",
-//                 "dataType": "Component",
-//                 "dataSource": [{
-//                     "componentType": "View",
-//                     "styleName": "col-md",
-//                     "dataType": "Component",
-//                     "id": "5",
-//                     "dataSource": [{
-//                         "componentType": "Text",
-//                         "styleName": "title",
-//                         "id": "6",
-//                         "dataType": "String",
-//                         "dataSource": "Simpler. Smarter. Faster."
-//                     }, {
-//                         "componentType": "Text",
-//                         "styleName": "title",
-//                         "id": "7",
-//                         "dataType": "String",
-//                         "dataSource": "The CloudCheckr Cloud Management Platform (CMP) provides full visibility and control to reduce costs, improve cybersecurity posture, and automate critical tasks."
-//                     }]
-//                 }]
-//             }]
-//         }]
-// }]
+var styleData 
+ = {
+    'page-headerpage-header-small': {
+        'minHeight': '60vh',
+        'maxHeight': 100
+    }
+    ,
+    'page-header': {
+        'minHeight': '100vh',
+        'maxHeight': 999,
+        'padding': 0,
+        'backgroundColor': '#FFFFFF',
+        'position': 'relative'
+    },
+    "row": {
+        'flex': 1,
+        "justifyContent": "center"
+    },
+    'page-header-image': {
+        'position': 'absolute',
+        'resizeMode': 'cover',
+        'width': '100%',
+        'height': '100%',
+        'zIndex': -1
+    },
+    'content-center': {
+        'top': '10%'
+    }
+    , "col_md": {
+        "maxWidth": '66.666667%'
+    }
+    , "title": {
+        "fontWeight": "700",
+        "color": "#ffffff",
+        "paddingLeft": 30,
+        "textShadowOffset": {
+            "width": 1,
+            "height": 1
+        },
+        "textShadowRadius": 2,
+        "textShadowColor": "#000000",
+        "fontSize": 20,
+        "paddingRight": 30,
+        "alignSelf": "center",
+        "paddingTop": 30
+    }
+}
 
-
+var jsonData;
+var modelData;
+var styleBootstrap;
 
 //Chuyển đổi style name từ Css ra React Style names
 function convertReactStyleNames(strData) {
@@ -184,19 +184,22 @@ export class MyScreen extends React.Component {
         this.ComponentType = Swastika.ComponentType;
     }
 
-    generateTag = (data) => {
+    generateTag = (data, modelDataChild) => {
         let Arr = (data).map((entry, i) => {
-            switch (entry.ComponentType) {
+            var test = this.ComponentType.View;
+            switch (entry.componentType) {
                 case this.ComponentType.View:
                     if (entry.dataType == 'background') {
                         return <Swastika.CustomImage key={i + 'CustomImage'}
                             generateTag={this.generateTag}
+                            modelData={modelDataChild}
                             getListStylesByStyleName={this.getListStylesByStyleName}
                             id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                             dataSource={entry.dataSource} dataType={entry.dataType} />
                     } else {
                         return <Swastika.CustomView key={i + 'CustomView'}
                             generateTag={this.generateTag}
+                            modelData={modelDataChild}
                             getListStylesByStyleName={this.getListStylesByStyleName}
                             id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                             dataSource={entry.dataSource} dataType={entry.dataType} />
@@ -204,11 +207,19 @@ export class MyScreen extends React.Component {
                 case this.ComponentType.Text:
                     return <Swastika.CustomText key={i + 'CustomText'}
                         generateTag={this.generateTag}
+                        modelData={modelDataChild}
+                        getListStylesByStyleName={this.getListStylesByStyleName}
+                        id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
+                        dataSource={entry.dataSource} dataType={entry.dataType} />
+                case this.ComponentType.Image:
+                    return <Swastika.CustomText key={i + 'CustomImage'}
+                        generateTag={this.generateTag}
+                        modelData={modelDataChild}
                         getListStylesByStyleName={this.getListStylesByStyleName}
                         id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                         dataSource={entry.dataSource} dataType={entry.dataType} />
                 default:
-                    return <View />
+                    return <View key={i}/>
             }
         })
         return Arr;
@@ -231,10 +242,17 @@ export class MyScreen extends React.Component {
     async getDataJson() {
         var swasitkaData = await fetch("https://swastika.io/api/vi-vn/module/details/3")
         let responseJson = await swasitkaData.json();
-        var content = responseJson.data.view.mobileView;
-        jsonData = content.componentData;
-        var dataStyle = parserStyle(content.styleData);
-        styleBootstrap = StyleSheet.create(dataStyle)
+
+        modelData = responseJson.data;
+        jsonData = [];
+        //Dữ liệu của component
+        jsonData.push(modelData.view.mobileComponent);
+
+        //Dữ liệu của Style
+        // var content = modelData.view.mobileView;
+        // var dataStyle = parserStyle(content.styleData);
+        styleBootstrap = StyleSheet.create(styleData)
+
         this.setState({ isLoading: false, refreshing: false })
     }
 
@@ -250,7 +268,7 @@ export class MyScreen extends React.Component {
                         refreshing={this.state.refreshing}
                         onRefresh={this._onRefresh.bind(this)}
                     />}>
-                    {this.generateTag(data)}
+                    {this.generateTag(data, modelData)}
                 </ScrollView>
             )
         } else {

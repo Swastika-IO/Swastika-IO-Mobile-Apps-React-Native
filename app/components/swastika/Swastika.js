@@ -2,58 +2,66 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native';
 
-var HOST = 'https://aamboceanservice.blob.core.windows.net'
+var HOST = 'https://swastika.io'
 
 
 export const ComponentType = {
-    View: 0,
-    ScrollView: 1,
-    Text: 2,
-    Image: 3,
-    Button: 4,
+    View: "View",
+    ScrollView: "ScrollView",
+    Text: "Text",
+    Image: "Image",
+    Button: "Button",
 }
 
 export const DataType = {
-    string: 0,
-    image: 1,
-    url: 2,
-    object: 3,
-    component: 4,
+    string: "string",
+    image_url: "image_url",
+    object: "object",
+    component: "component",
+    object_array: "object_array"
 }
 
 export class CustomText extends React.Component {
-    // "componentType": "Text",
-    // "styleName": "title",
-    // "id": "6",
-    // "dataType": "String",
-    // "dataSource": "Simpler. Smarter. Faster."
-
     static propTypes = {
         styleName: PropTypes.array.isRequired,
     }
 
     constructor(props) {
         super(props)
-        const { styleName, dataType, dataSource, id } = this.props;
-        this.content = convertDataType(dataType, dataSource);
+        const { styleName, dataType, id, modelData, dataValue } = this.props;
+        this.content = this.convertDataType(dataType, dataValue, modelData);
         this.key = id;
         this.style = props.getListStylesByStyleName(styleName);
     }
 
-    convertDataType(type, dataSource) {
+    convertDataType(type, dataValue, modelData) {
         switch (type) {
             case DataType.string:
-                return dataSource;
+                return dataValue;
             case DataType.object:
-                const { objectData } = this.props;
-                return objectData ? objectData[dataSource] : "";
+                var data
+                if (modelData && dataValue) {
+                    let keyProp = dataValue.split('.');
+                    if (keyProp.lenght > 0) {
+                        if (keyProp[0].indexOf('@') >= 0) {
+                            delete keyProp[0];
+                            //Need Edit **************************
+                            data = modelData;
+                        } else {
+                            data = modelData;
+                        }
+                        for (let key of keyProp) {
+                            data = data[key.toLowerCase()];
+                        }
+                    }
+                }
+                return data ? data : "";
             default:
                 return "";
         }
     }
 
     render = () => {
-
         return (
             <Text key={this.key} style={this.style}>{this.content}</Text>
         );
@@ -68,8 +76,9 @@ export class CustomView extends React.Component {
 
     constructor(props) {
         super(props)
-        const { styleName, dataType, dataSource, id } = this.props;
-        this.content = convertDataType(dataType, dataSource);
+        const { styleName, dataType, id, modelData, dataValue, dataSource } = this.props;
+        this.content = this.convertDataType(dataType, dataValue, modelData);
+        this.dataSource = dataSource;
         this.key = id;
         this.style = props.getListStylesByStyleName(styleName);
         //Lọc style properties cho View
@@ -81,20 +90,37 @@ export class CustomView extends React.Component {
         }
     }
 
-    convertDataType(type, dataSource) {
+    convertDataType(type, dataValue, modelData) {
         switch (type) {
             case DataType.component:
-                return dataSource;
+                return modelData;
+            case DataType.object_array:
+                var data
+                if (modelData && dataValue) {
+                    let keyProp = dataValue.split('.');
+                    if (keyProp.lenght > 0) {
+                        if (keyProp[0].indexOf('@') >= 0) {
+                            delete keyProp[0];
+                            //Need Edit **************************
+                            data = modelData;
+                        } else {
+                            data = modelData;
+                        }
+                        for (let key of keyProp) {
+                            data = data[key.toLowerCase()];
+                        }
+                    }
+                }
+                return data ? data : "";
             default:
                 return "";
         }
     }
 
-
     render = () => {
         return (
             <View key={this.key} style={this.style}>
-                {this.props.generateTag(this.content)}
+                {this.props.generateTag(this.dataSource, this.content)}
             </View>
         );
     }
@@ -107,19 +133,18 @@ export class CustomImage extends React.Component {
 
     constructor(props) {
         super(props)
-        const { styleName, dataType, dataSource, id } = this.props;
-        this.content = convertDataType(dataType, dataSource);
+        const { styleName, dataType, id, modelData, dataValue, dataSource } = this.props;
+        this.content = this.convertDataType(dataType, dataValue, modelData);
         this.key = id;
         this.style = props.getListStylesByStyleName(styleName);
     }
 
-    convertDataType(type, dataSource) {
+    convertDataType(type, dataValue, modelData) {
         switch (type) {
-            case DataType.image:
-                return converImageURL(dataSource);
-            case DataType.object:
-                const { objectData } = this.props;
-                return objectData ? objectData[dataSource] : "";
+            case DataType.component:
+                return modelData;
+            case DataType.image_url:
+                return dataValue;
             default:
                 return "";
         }
@@ -130,10 +155,9 @@ export class CustomImage extends React.Component {
     }
 
     render = () => {
-        const { styleName, dataSource, id, dataType } = this.props;
         return (
-            <Image key={id} style={this.style}
-                source={{ uri: this.converImageURL(dataSource) }} />
+            <Image key={this.key} style={this.style}
+                source={{ uri: this.converImageURL(this.content) }} />
         );
     }
 }
