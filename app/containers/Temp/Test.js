@@ -101,53 +101,103 @@ function parserStyle(strStyle) {
     return newStyle;
 }
 
-var styleData 
- = {
-    'page-headerpage-header-small': {
-        'minHeight': '60vh',
-        'maxHeight': 100
-    }
-    ,
-    'page-header': {
-        'minHeight': '100vh',
-        'maxHeight': 999,
-        'padding': 0,
-        'backgroundColor': '#FFFFFF',
-        'position': 'relative'
-    },
-    "row": {
-        'flex': 1,
-        "justifyContent": "center"
-    },
-    'page-header-image': {
-        'position': 'absolute',
-        'resizeMode': 'cover',
-        'width': '100%',
-        'height': '100%',
-        'zIndex': -1
-    },
-    'content-center': {
-        'top': '10%'
-    }
-    , "col_md": {
-        "maxWidth": '66.666667%'
-    }
-    , "title": {
-        "fontWeight": "700",
-        "color": "#ffffff",
-        "paddingLeft": 30,
-        "textShadowOffset": {
-            "width": 1,
-            "height": 1
+var styleData
+    = {
+        "about-description": {
+            "padding": 0
         },
-        "textShadowRadius": 2,
-        "textShadowColor": "#000000",
-        "fontSize": 20,
-        "paddingRight": 30,
-        "alignSelf": "center",
-        "paddingTop": 30
+        "text-center": {
+        },
+        "features-3": {
+            "padding": 0
+        },
+        "container": {
+            "width": "100%",
+            "paddingRight": 15,
+            "paddingLeft": 15,
+            "zIndex": 2,
+            "position": "relative"
+        },
+        "page-headerpage-header-small": {
+            "minHeight": "60vh",
+            "maxHeight": 100
+        }
+        ,
+        "page-header": {
+            "minHeight": "100vh",
+            "maxHeight": 999,
+            "padding": 0,
+            "backgroundColor": "#FFFFFF",
+            "position": "relative"
+        },
+        "row": {
+            "flex": 1,
+            "justifyContent": "center"
+        },
+        "img": {
+            "position": "absolute",
+            "resizeMode": "cover",
+            "width": "100%",
+            "height": "100%",
+            "zIndex": -1
+        },
+        "content-center": {
+            "top": "10%"
+        }
+        , "col-md-4": {
+            "justifyContent": "center",
+            "width": "100%",
+            "paddingRight": 15,
+            "paddingLeft": 15
+        }
+        , "col-md": {
+            "maxWidth": "66.666667%",
+            "paddingRight": 15,
+            "paddingLeft": 15
+        }
+        , "title": {
+            "fontWeight": "700",
+            "paddingTop": 30,
+            "marginBottom": 30,
+            "fontSize": 25,
+            "textAlign": "center"
+        }
+        , "icon-circle": {
+            "alignSelf": "center",
+            "maxWidth": 80,
+            "width": 80,
+            "height": 80,
+            "borderRadius": 40,
+            "backgroundColor": "#ffffff",
+            "position": "relative"
+        }
+        , "info": {
+            "maxWidth": 360,
+            "paddingTop": 70,
+            "paddingBottom": 30
+        }
+        , "info-title": {
+            "fontWeight": "700",
+            "color": "#000000",
+            "paddingLeft": 30,
+            "textShadowOffset": {
+                "width": 1,
+                "height": 1
+            },
+            "fontSize": 20,
+            "paddingRight": 30,
+            "textAlign": "center",
+            "paddingTop": 30
+        }
+        , "description": {
+            "fontWeight": "300",
+            "color": "#9A9A9A",
+            "marginTop": 30,
+            "marginBottom": 15,
+            "fontSize": 24,
+            "textAlign": "center"
+        }
     }
-}
 
 var jsonData;
 var modelData;
@@ -192,14 +242,14 @@ export class MyScreen extends React.Component {
                     if (entry.dataType == 'background') {
                         return <Swastika.CustomImage key={i + 'CustomImage'}
                             generateTag={this.generateTag}
-                            modelData={modelDataChild}
+                            modelData={modelDataChild} dataValue={entry.dataValue}
                             getListStylesByStyleName={this.getListStylesByStyleName}
                             id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                             dataSource={entry.dataSource} dataType={entry.dataType} />
                     } else {
                         return <Swastika.CustomView key={i + 'CustomView'}
                             generateTag={this.generateTag}
-                            modelData={modelDataChild}
+                            modelData={modelDataChild} dataValue={entry.dataValue}
                             getListStylesByStyleName={this.getListStylesByStyleName}
                             id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                             dataSource={entry.dataSource} dataType={entry.dataType} />
@@ -207,19 +257,19 @@ export class MyScreen extends React.Component {
                 case this.ComponentType.Text:
                     return <Swastika.CustomText key={i + 'CustomText'}
                         generateTag={this.generateTag}
-                        modelData={modelDataChild}
+                        modelData={modelDataChild} dataValue={entry.dataValue}
                         getListStylesByStyleName={this.getListStylesByStyleName}
                         id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                         dataSource={entry.dataSource} dataType={entry.dataType} />
                 case this.ComponentType.Image:
-                    return <Swastika.CustomText key={i + 'CustomImage'}
+                    return <Swastika.CustomImage key={i + 'CustomImage'}
                         generateTag={this.generateTag}
-                        modelData={modelDataChild}
+                        modelData={modelDataChild} dataValue={entry.dataValue}
                         getListStylesByStyleName={this.getListStylesByStyleName}
                         id={entry.id} styleName={convertReactStyleNames(entry.styleName)}
                         dataSource={entry.dataSource} dataType={entry.dataType} />
                 default:
-                    return <View key={i}/>
+                    return <View key={i} />
             }
         })
         return Arr;
@@ -249,9 +299,9 @@ export class MyScreen extends React.Component {
         jsonData.push(modelData.view.mobileComponent);
 
         //Dữ liệu của Style
-        // var content = modelData.view.mobileView;
-        // var dataStyle = parserStyle(content.styleData);
-        styleBootstrap = StyleSheet.create(styleData)
+        var content = modelData.view.mobileView;
+        var dataStyle = parserStyle(styleData);
+        styleBootstrap = StyleSheet.create(dataStyle)
 
         this.setState({ isLoading: false, refreshing: false })
     }

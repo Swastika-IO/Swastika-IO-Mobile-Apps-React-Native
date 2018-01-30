@@ -4,7 +4,6 @@ import { View, Text, Image } from 'react-native';
 
 var HOST = 'https://swastika.io'
 
-
 export const ComponentType = {
     View: "View",
     ScrollView: "ScrollView",
@@ -42,16 +41,18 @@ export class CustomText extends React.Component {
                 var data
                 if (modelData && dataValue) {
                     let keyProp = dataValue.split('.');
-                    if (keyProp.lenght > 0) {
-                        if (keyProp[0].indexOf('@') >= 0) {
+                    if (keyProp.length > 0) {
+                        let index = keyProp[0].indexOf('@');
+                        if (index >= 0) {
                             delete keyProp[0];
                             //Need Edit **************************
+                            keyProp.splice(index, 1);
                             data = modelData;
                         } else {
                             data = modelData;
                         }
                         for (let key of keyProp) {
-                            data = data[key.toLowerCase()];
+                            data = data[key];
                         }
                     }
                 }
@@ -98,16 +99,18 @@ export class CustomView extends React.Component {
                 var data
                 if (modelData && dataValue) {
                     let keyProp = dataValue.split('.');
-                    if (keyProp.lenght > 0) {
-                        if (keyProp[0].indexOf('@') >= 0) {
+                    if (keyProp.length > 0) {
+                        let index = keyProp[0].indexOf('@');
+                        if (index >= 0) {
                             delete keyProp[0];
                             //Need Edit **************************
+                            keyProp.splice(index, 1);
                             data = modelData;
                         } else {
                             data = modelData;
                         }
                         for (let key of keyProp) {
-                            data = data[key.toLowerCase()];
+                            data = data[key];
                         }
                     }
                 }
@@ -118,9 +121,21 @@ export class CustomView extends React.Component {
     }
 
     render = () => {
+        let renderObject = [];
+        if (this.content instanceof Array) {
+            for (let contentChild of this.content) {
+                renderObject.push(
+                    this.props.generateTag(this.dataSource, contentChild)
+                )
+            }
+        } else {
+            renderObject.push(
+                this.props.generateTag(this.dataSource, this.content)
+            )
+        }
         return (
             <View key={this.key} style={this.style}>
-                {this.props.generateTag(this.dataSource, this.content)}
+                {renderObject}
             </View>
         );
     }
