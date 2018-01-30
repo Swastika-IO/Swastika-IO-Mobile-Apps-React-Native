@@ -102,102 +102,112 @@ function parserStyle(strStyle) {
 }
 
 var styleData
-    = {
-        "about-description": {
-            "padding": 0
-        },
-        "text-center": {
-        },
-        "features-3": {
-            "padding": 0
-        },
-        "container": {
-            "width": "100%",
-            "paddingRight": 15,
-            "paddingLeft": 15,
-            "zIndex": 2,
-            "position": "relative"
-        },
-        "page-headerpage-header-small": {
-            "minHeight": "60vh",
-            "maxHeight": 100
-        }
-        ,
-        "page-header": {
-            "minHeight": "100vh",
-            "maxHeight": 999,
-            "padding": 0,
-            "backgroundColor": "#FFFFFF",
-            "position": "relative"
-        },
-        "row": {
-            "flex": 1,
-            "justifyContent": "center"
-        },
-        "img": {
-            "position": "absolute",
-            "resizeMode": "cover",
-            "width": "100%",
-            "height": "100%",
-            "zIndex": -1
-        },
-        "content-center": {
-            "top": "10%"
-        }
-        , "col-md-4": {
-            "justifyContent": "center",
-            "width": "100%",
-            "paddingRight": 15,
-            "paddingLeft": 15
-        }
-        , "col-md": {
-            "maxWidth": "66.666667%",
-            "paddingRight": 15,
-            "paddingLeft": 15
-        }
-        , "title": {
-            "fontWeight": "700",
-            "paddingTop": 30,
-            "marginBottom": 30,
-            "fontSize": 25,
-            "textAlign": "center"
-        }
-        , "icon-circle": {
-            "alignSelf": "center",
-            "maxWidth": 80,
-            "width": 80,
-            "height": 80,
-            "borderRadius": 40,
-            "backgroundColor": "#ffffff",
-            "position": "relative"
-        }
-        , "info": {
-            "maxWidth": 360,
-            "paddingTop": 70,
-            "paddingBottom": 30
-        }
-        , "info-title": {
-            "fontWeight": "700",
-            "color": "#000000",
-            "paddingLeft": 30,
-            "textShadowOffset": {
-                "width": 1,
-                "height": 1
-            },
-            "fontSize": 20,
-            "paddingRight": 30,
-            "textAlign": "center",
-            "paddingTop": 30
-        }
-        , "description": {
-            "fontWeight": "300",
-            "color": "#9A9A9A",
-            "marginTop": 30,
-            "marginBottom": 15,
-            "fontSize": 24,
-            "textAlign": "center"
-        }
-    }
+    // = {
+    //     "about-description": {
+    //         "padding": 0,
+    //         "backgroundColor":"white"
+    //     },
+    //     "text-center": {
+    //     },
+    //     "features-3": {
+    //         "padding": 0
+    //     },
+    //     "container": {
+    //         "width": "100%",
+    //         "paddingRight": 15,
+    //         "paddingLeft": 15,
+    //         "zIndex": 2,
+    //         "position": "relative"
+    //     },
+    //     "page-headerpage-header-small": {
+    //         "minHeight": "60vh",
+    //         "maxHeight": 100
+    //     }
+    //     ,
+    //     "page-header": {
+    //         "minHeight": "100vh",
+    //         "maxHeight": 999,
+    //         "padding": 0,
+    //         "backgroundColor": "#FFFFFF",
+    //         "position": "relative"
+    //     },
+    //     "row": {
+    //         "flex": 1,
+    //         "justifyContent": "center"
+    //     },
+    //     "img": {
+    //         "position": "absolute",
+    //         "resizeMode": "cover",
+    //         "width": "100%",
+    //         "height": "100%",
+    //         "zIndex": -1
+    //     },
+    //     "content-center": {
+    //         "top": "10%"
+    //     }
+    //     , "col-md-4": {
+    //         "justifyContent": "center",
+    //         "width": "100%",
+    //         "paddingRight": 15,
+    //         "paddingLeft": 15
+    //     }
+    //     , "col-md": {
+    //         "maxWidth": "66.666667%",
+    //         "paddingRight": 15,
+    //         "paddingLeft": 15
+    //     }
+    //     , "title": {
+    //         "fontWeight": "700",
+    //         "paddingTop": 30,
+    //         "marginBottom": 30,
+    //         "fontSize": 25,
+    //         "textAlign": "center"
+    //     }
+    //     ,"now-ui-icons":{
+    //         "width":0,
+    //         "height":0
+    //     }
+    //     , "icon-circle": {
+    //         "alignSelf": "center",
+    //         "width": 80,
+    //         "shadowColor": "green",
+    //         "shadowOffset": { "width": 0, "height": 2 },
+    //         "shadowOpacity": 0.8,
+    //         "shadowRadius": 2,
+    //         "elevation": 1,
+    //         "marginBottom":10,
+    //         "height": 80,
+    //         "borderRadius": 40,
+    //         "backgroundColor": "white"
+    //     }
+    //     , "info": {
+    //         "maxWidth": 360,
+    //         "paddingTop": 70,
+    //         "paddingBottom": 30
+    //     }
+    //     , "info-title": {
+    //         "fontWeight": "700",
+    //         "color": "#000000",
+    //         "paddingLeft": 30,
+    //         "textShadowOffset": {
+    //             "width": 1,
+    //             "height": 1
+    //         },
+    //         "fontSize": 20,
+    //         "paddingRight": 30,
+    //         "textAlign": "center",
+    //         "paddingTop": 30
+    //     }
+    //     , "description": {
+    //         "fontWeight": "300",
+    //         "color": "#9A9A9A",
+    //         "marginTop": 30,
+    //         "backgroundColor":"transparent",
+    //         "marginBottom": 15,
+    //         "fontSize": 24,
+    //         "textAlign": "center"
+    //     }
+    // }
 
 var jsonData;
 var modelData;
@@ -300,7 +310,7 @@ export class MyScreen extends React.Component {
 
         //Dữ liệu của Style
         var content = modelData.view.mobileView;
-        var dataStyle = parserStyle(styleData);
+        var dataStyle = parserStyle(content);
         styleBootstrap = StyleSheet.create(dataStyle)
 
         this.setState({ isLoading: false, refreshing: false })
