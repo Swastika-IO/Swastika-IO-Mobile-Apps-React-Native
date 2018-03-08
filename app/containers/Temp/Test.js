@@ -210,7 +210,7 @@ var styleData
     // }
 
 var jsonData;
-var modelData;
+var modelData; 
 var styleBootstrap;
 
 //Chuyển đổi style name từ Css ra React Style names
