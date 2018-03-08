@@ -2,6 +2,7 @@ import SplashScreen from '../containers/Splash/splash.ui';
 import HomeScreen from '../containers/Home/home.ui';
 import ArticleDetails from '../containers/Article/articleDetail.ui';
 import LoginScreen from '../containers/Login/login.ui';
+import Chat from '../containers/Messaging/chat.ui';
 import MyCom from '../containers/Temp/Test';
 
 export default RootRoutes = {
@@ -24,5 +25,9 @@ export default RootRoutes = {
     Mycustome: {
         screen: MyCom,
         name: 'Mycustome'
+    },
+    MyChat: {
+        screen: Chat,
+        name: 'MyChat'
     }
 }

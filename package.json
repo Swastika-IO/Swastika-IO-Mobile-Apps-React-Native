@@ -15,6 +15,7 @@
     "lodash": "4.17.4",
     "prop-types": "15.6.0",
     "react": "16.2.0",
+    "@aspnet/signalr": "1.0.0-preview1-final",
     "react-native": "0.51.0",
     "moment": "2.20.1",
     "react-native-css": "^2.1.2",

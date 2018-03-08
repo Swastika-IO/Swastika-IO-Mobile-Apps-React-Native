@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native';
+import { FontAwesome } from '../../assets/icons';
 
-var HOST = 'https://swastika.io'
+var HOST = 'http://dev.swastika.io'
 
 export const ComponentType = {
     View: "View",
@@ -27,10 +28,18 @@ export class CustomText extends React.Component {
 
     constructor(props) {
         super(props)
-        const { styleName, dataType, id, modelData, dataValue } = this.props;
+        this.initData(props)
+    }
+
+    initData(prop) {
+        const { styleName, dataType, id, modelData, dataValue } = prop;
         this.content = this.convertDataType(dataType, dataValue, modelData);
         this.key = id;
-        this.style = props.getListStylesByStyleName(styleName);
+        this.style = prop.getListStylesByStyleName(styleName);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.initData(nextProps)
     }
 
     convertDataType(type, dataValue, modelData) {
@@ -39,6 +48,9 @@ export class CustomText extends React.Component {
                 return dataValue;
             case DataType.object:
                 var data
+                if (dataValue.length == 0) {
+                    return FontAwesome.twitter
+                }
                 if (modelData && dataValue) {
                     let keyProp = dataValue.split('.');
                     if (keyProp.length > 0) {
@@ -77,11 +89,15 @@ export class CustomView extends React.Component {
 
     constructor(props) {
         super(props)
-        const { styleName, dataType, id, modelData, dataValue, dataSource } = this.props;
+        this.initData(props)
+    }
+
+    initData(prop) {
+        const { styleName, dataType, id, modelData, dataValue, dataSource } = prop;
         this.content = this.convertDataType(dataType, dataValue, modelData);
         this.dataSource = dataSource;
         this.key = id;
-        this.style = props.getListStylesByStyleName(styleName);
+        this.style = prop.getListStylesByStyleName(styleName);
         //Lọc style properties cho View
         for (let styleChild of this.style) {
             if (styleChild.hasOwnProperty('color')) {
@@ -89,6 +105,10 @@ export class CustomView extends React.Component {
                 delete styleChild['color']
             }
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.initData(nextProps)
     }
 
     convertDataType(type, dataValue, modelData) {
@@ -148,10 +168,18 @@ export class CustomImage extends React.Component {
 
     constructor(props) {
         super(props)
-        const { styleName, dataType, id, modelData, dataValue, dataSource } = this.props;
+        this.initData(props)
+    }
+
+    initData(prop) {
+        const { styleName, dataType, id, modelData, dataValue, dataSource } = prop;
         this.content = this.convertDataType(dataType, dataValue, modelData);
         this.key = id;
-        this.style = props.getListStylesByStyleName(styleName);
+        this.style = prop.getListStylesByStyleName(styleName);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.initData(nextProps)
     }
 
     convertDataType(type, dataValue, modelData) {

@@ -102,116 +102,120 @@ function parserStyle(strStyle) {
 }
 
 var styleData
-    // = {
-    //     "about-description": {
-    //         "padding": 0,
-    //         "backgroundColor":"white"
-    //     },
-    //     "text-center": {
-    //     },
-    //     "features-3": {
-    //         "padding": 0
-    //     },
-    //     "container": {
-    //         "width": "100%",
-    //         "paddingRight": 15,
-    //         "paddingLeft": 15,
-    //         "zIndex": 2,
-    //         "position": "relative"
-    //     },
-    //     "page-headerpage-header-small": {
-    //         "minHeight": "60vh",
-    //         "maxHeight": 100
-    //     }
-    //     ,
-    //     "page-header": {
-    //         "minHeight": "100vh",
-    //         "maxHeight": 999,
-    //         "padding": 0,
-    //         "backgroundColor": "#FFFFFF",
-    //         "position": "relative"
-    //     },
-    //     "row": {
-    //         "flex": 1,
-    //         "justifyContent": "center"
-    //     },
-    //     "img": {
-    //         "position": "absolute",
-    //         "resizeMode": "cover",
-    //         "width": "100%",
-    //         "height": "100%",
-    //         "zIndex": -1
-    //     },
-    //     "content-center": {
-    //         "top": "10%"
-    //     }
-    //     , "col-md-4": {
-    //         "justifyContent": "center",
-    //         "width": "100%",
-    //         "paddingRight": 15,
-    //         "paddingLeft": 15
-    //     }
-    //     , "col-md": {
-    //         "maxWidth": "66.666667%",
-    //         "paddingRight": 15,
-    //         "paddingLeft": 15
-    //     }
-    //     , "title": {
-    //         "fontWeight": "700",
-    //         "paddingTop": 30,
-    //         "marginBottom": 30,
-    //         "fontSize": 25,
-    //         "textAlign": "center"
-    //     }
-    //     ,"now-ui-icons":{
-    //         "width":0,
-    //         "height":0
-    //     }
-    //     , "icon-circle": {
-    //         "alignSelf": "center",
-    //         "width": 80,
-    //         "shadowColor": "green",
-    //         "shadowOffset": { "width": 0, "height": 2 },
-    //         "shadowOpacity": 0.8,
-    //         "shadowRadius": 2,
-    //         "elevation": 1,
-    //         "marginBottom":10,
-    //         "height": 80,
-    //         "borderRadius": 40,
-    //         "backgroundColor": "white"
-    //     }
-    //     , "info": {
-    //         "maxWidth": 360,
-    //         "paddingTop": 70,
-    //         "paddingBottom": 30
-    //     }
-    //     , "info-title": {
-    //         "fontWeight": "700",
-    //         "color": "#000000",
-    //         "paddingLeft": 30,
-    //         "textShadowOffset": {
-    //             "width": 1,
-    //             "height": 1
-    //         },
-    //         "fontSize": 20,
-    //         "paddingRight": 30,
-    //         "textAlign": "center",
-    //         "paddingTop": 30
-    //     }
-    //     , "description": {
-    //         "fontWeight": "300",
-    //         "color": "#9A9A9A",
-    //         "marginTop": 30,
-    //         "backgroundColor":"transparent",
-    //         "marginBottom": 15,
-    //         "fontSize": 24,
-    //         "textAlign": "center"
-    //     }
-    // }
+// = {
+//     "about-description": {
+//         "padding": 0,
+//         "backgroundColor": "white"
+//     },
+//     "text-center": {
+//     },
+//     "features-3": {
+//         "padding": 0
+//     },
+//     "container": {
+//         "width": "100%",
+//         "paddingRight": 15,
+//         "paddingLeft": 15,
+//         "zIndex": 2,
+//         "position": "relative"
+//     },
+//     "page-headerpage-header-small": {
+//         "minHeight": "60vh",
+//         "maxHeight": 100
+//     }
+//     ,
+//     "page-header": {
+//         "minHeight": "100vh",
+//         "maxHeight": 999,
+//         "padding": 0,
+//         "backgroundColor": "#FFFFFF",
+//         "position": "relative"
+//     },
+//     "row": {
+//         "flex": 1,
+//         "justifyContent": "center"
+//     },
+//     "img": {
+//         "position": "absolute",
+//         "resizeMode": "cover",
+//         "width": "100%",
+//         "height": "100%",
+//         "zIndex": -1
+//     },
+//     "content-center": {
+//         "top": "10%"
+//     }
+//     , "col-md-4": {
+//         "justifyContent": "center",
+//         "width": "100%",
+//         "paddingRight": 15,
+//         "paddingLeft": 15
+//     }
+//     , "col-md": {
+//         "maxWidth": "66.666667%",
+//         "paddingRight": 15,
+//         "paddingLeft": 15
+//     }
+//     , "title": {
+//         "fontWeight": "700",
+//         "paddingTop": 30,
+//         "marginBottom": 30,
+//         "fontSize": 25,
+//         "textAlign": "center"
+//     }
+//     , "now-ui-icons": {
+//         "alignSelf": "center",
+//         "color": "#18ce0f",
+//         "textAlign": "center",
+//         "fontSize": 25,
+//     }
+//     , "icon-circle": {
+//         "justifyContent": "center",
+//         "alignSelf": "center",
+//         "width": 80,
+//         "shadowColor": "#18ce0f",
+//         "shadowOffset": { "width": 0, "height": 2 },
+//         "shadowOpacity": 0.8,
+//         "shadowRadius": 2,
+//         "elevation": 3,
+//         "marginBottom": 10,
+//         "height": 80,
+//         "borderRadius": 40,
+//         "backgroundColor": "white"
+//     }
+//     , "info": {
+//         "maxWidth": 360,
+//         "paddingTop": 70,
+//         "paddingBottom": 30
+//     }
+//     , "info-title": {
+//         "fontWeight": "700",
+//         "color": "#000000",
+//         "paddingLeft": 30,
+//         "textShadowOffset": {
+//             "width": 1,
+//             "height": 1
+//         },
+//         "fontSize": 20,
+//         "paddingRight": 30,
+//         "textAlign": "center",
+//         "paddingTop": 30
+//     }
+//     , "description": {
+//         "fontWeight": "300",
+//         "color": "#9A9A9A",
+//         "marginTop": 30,
+//         "backgroundColor": "transparent",
+//         "marginBottom": 15,
+//         "fontSize": 24,
+//         "textAlign": "center"
+//     }
+// }
 
 var jsonData;
 var modelData;
 var styleBootstrap;
+var indexR = 0;
 
 //Chuyển đổi style name từ Css ra React Style names
 function convertReactStyleNames(strData) {
@@ -241,6 +245,7 @@ export class MyScreen extends React.Component {
             isLoading: true,
             refreshing: false
         }
+        this.contentView;
         this.ComponentType = Swastika.ComponentType;
     }
 
@@ -300,7 +305,7 @@ export class MyScreen extends React.Component {
     }
 
     async getDataJson() {
-        var swasitkaData = await fetch("https://swastika.io/api/vi-vn/module/details/3")
+        var swasitkaData = await fetch("http://dev.swastika.io/api/vi-vn/module/details/3")
         let responseJson = await swasitkaData.json();
 
         modelData = responseJson.data;
@@ -313,22 +318,36 @@ export class MyScreen extends React.Component {
         var dataStyle = parserStyle(content);
         styleBootstrap = StyleSheet.create(dataStyle)
 
-        this.setState({ isLoading: false, refreshing: false })
+        indexR++;
+        delete this.contentView;
+        if(indexR > 6){
+            this.contentView = this.generateTag(jsonData, modelData);
+        }else
+        if(indexR > 4){
+            this.contentView = (<View/>);
+        }else{
+        this.contentView = this.generateTag(jsonData, modelData);
+        }
+        this.setState({
+            isLoading: false,
+            refreshing: false
+        })
     }
 
     componentDidMount() {
         this.getDataJson();
     }
+
     render() {
         if (!this.state.isLoading) {
-            const data = jsonData
+            // const data = this.state.jsonData
             return (
                 <ScrollView style={{ flex: 1 }} refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
                         onRefresh={this._onRefresh.bind(this)}
                     />}>
-                    {this.generateTag(data, modelData)}
+                    {this.contentView}
                 </ScrollView>
             )
         } else {

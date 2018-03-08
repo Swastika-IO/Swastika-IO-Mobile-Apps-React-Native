@@ -21,6 +21,7 @@ export const AppNavigator = StackNavigator({
   Splash: { screen: paramsToProps(RootRoutes.Splash.screen) },
   Home: { screen: paramsToProps(RootRoutes.Home.screen) },
   Mycustome: { screen: paramsToProps(RootRoutes.Mycustome.screen) },
+  MyChat: { screen: paramsToProps(RootRoutes.MyChat.screen) },
   ArticleDetail: { screen: paramsToProps(RootRoutes.ArticleDetail.screen) }
 }, {
     headerMode: 'none',
