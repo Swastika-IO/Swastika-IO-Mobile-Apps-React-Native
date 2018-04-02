@@ -13,9 +13,9 @@ import {
 } from 'react-native-ui-kitten';
 import { connect } from "react-redux";
 import _ from 'lodash'
-import RootRoutes  from '../../config/routes'
+import RootRoutes from '../../config/routes'
 import { NavigationActions } from 'react-navigation';
-import { fetchDataArticles } from "../../action/fetch-data/fetch-data";
+import { fetchDataPages } from "../../action/fetch-data/fetch-data";
 import { SocialBar } from '../../components/socialBar';
 import { HOST } from '../../config/APIConfig';
 import { loadData, saveData, loadDataSync } from '../../data/store/DataProvider'
@@ -24,13 +24,16 @@ let moment = require('moment');
 
 export class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Article List'.toUpperCase()
+    title: 'Article List'.toUpperCase(),
+    header: {
+      visible: false,
+    }
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      pageSize: 3,
+      pageSize: 5,
       pageIndex: 0,
       loadmore: false,
       refreshing: false,
@@ -41,7 +44,7 @@ export class HomeScreen extends React.Component {
 
   componentDidMount() {
     this._onRefresh();
-    loadDataSync(this.onLoadedSuccess, 'acticle')
+    loadDataSync(this.onLoadedSuccess, 'pages')
   }
 
   onLoadedSuccess = (items) => {
@@ -55,14 +58,14 @@ export class HomeScreen extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dataActicles } = nextProps;
+    const { dataPages } = nextProps;
     var increateIndex = this.state.pageIndex
-    if (dataActicles) {
-      const { isSucceed, data } = dataActicles;
+    if (dataPages) {
+      const { isSucceed, data } = dataPages;
       if (isSucceed) {
         const { pageIndex, items } = data
         if (pageIndex == 0)
-          saveData('acticle', data.items)
+          saveData('pages', data.items)
         this.data = pageIndex === 0 ? items : [...this.data, ...items];
         if (items.length > 0) {
           increateIndex = pageIndex + 1
@@ -101,6 +104,10 @@ export class HomeScreen extends React.Component {
   };
 
   converImageURL(image) {
+    //check image url if it contain "http" string, return itself
+    if (image && image.includes("http")) {
+      return image;
+    }
     return HOST + image
   }
 
@@ -109,8 +116,8 @@ export class HomeScreen extends React.Component {
       <TouchableOpacity
         delayPressIn={70}
         activeOpacity={0.8}
-        onPress={() => this.props.openArticleDetail({ dataArticle: info.item })}>
-        <RkCard rkType='backImg'>
+        onPress={() => this.props.openModules({ pageInfo: info.item })}>
+        <RkCard rkType='backImg' style={{ backgroundColor: 'gray' }}>
           <Image rkCardImg source={{
             uri: this.converImageURL(info.item.image),
             cache: 'only-if-cached',
@@ -118,9 +125,6 @@ export class HomeScreen extends React.Component {
           <View rkCardImgOverlay rkCardContent style={styles.overlay}>
             <RkText rkType='header2 inverseColor'>{info.item.title}</RkText>
             <RkText rkType='secondary2 inverseColor'>{moment().utc(info.item.createdDateTime).fromNow()}</RkText>
-            {/* <View rkCardFooter style={styles.footer}>
-              <SocialBar rkType='leftAligned' />
-            </View > */}
           </View>
         </RkCard>
       </TouchableOpacity>
@@ -131,9 +135,9 @@ export class HomeScreen extends React.Component {
     return (
       <FlatList data={this.data}
         renderItem={this.renderItem}
-        ListFooterComponent={this.renderFooter}
-        onEndReachedThreshold={0.001}
-        onEndReached={this._onEndReached}
+        // ListFooterComponent={this.renderFooter}
+        // onEndReachedThreshold={0.001}
+        // onEndReached={this._onEndReached}
         refreshControl={<RefreshControl
           refreshing={this.state.refreshing}
           onRefresh={this._onRefresh.bind(this)}
@@ -160,18 +164,23 @@ let styles = RkStyleSheet.create(theme => ({
 
 
 const mapStateToProps = (state) => {
-  if (!_.isEmpty(state.serviceReducer.dataInfo))
-    return {
-      dataActicles: state.serviceReducer.dataInfo
-    }
+  let dataInfo = state.serviceReducer.dataInfo;
+  if (!_.isEmpty(dataInfo)) {
+    if (state.serviceReducer.responseKey == 'PAGES_URL')
+      return {
+        dataPages: dataInfo
+      }
+  }
   return {
-    dataActicles: null
+    dataPages: null
   }
 };
 const mapDispatchToProps = (dispatch) => (
   {
-    openArticleDetail: (param) => dispatch(NavigationActions.navigate({ routeName: RootRoutes.ArticleDetail.name }, param)),
-    fetchData: (data) => dispatch(fetchDataArticles(data)),
+    openModules: (params) => {
+      dispatch(NavigationActions.navigate({ routeName: RootRoutes.MyModules.name, params }))
+    },
+    fetchData: (data) => dispatch(fetchDataPages(data)),
   }
 );
 

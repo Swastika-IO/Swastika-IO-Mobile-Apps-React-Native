@@ -76,7 +76,7 @@ export class CustomText extends React.Component {
 
     render = () => {
         return (
-            <Text key={this.key} style={this.style}>{this.content}</Text>
+            <Text key={this.key} >{this.content}</Text>
         );
     }
 }

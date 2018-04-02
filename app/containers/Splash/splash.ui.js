@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import {
   KittenTheme
 } from '../../config/theme';
-import { RootRoutes } from '../../config/routes'
+import RootRoutes from '../../config/routes'
 import { NavigationActions } from 'react-navigation';
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 
@@ -39,14 +39,14 @@ export class SplashScreen extends React.Component {
     this.timer = setInterval(() => {
       if (this.state.progress == 1) {
         clearInterval(this.timer);
-        // setTimeout(() => {
-        //   StatusBar.setHidden(false, 'slide');
-        //   let toHome = NavigationActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({ routeName: RootRoutes.Login.screen.toString() })]
-        //   });
-        //   this.props.navigation.dispatch(toHome)
-        // }, timeFrame);
+        setTimeout(() => {
+          StatusBar.setHidden(false, 'slide');
+          let toHome = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: RootRoutes.Home.name })]
+          });
+          this.props.navigation.dispatch(toHome)
+        }, timeFrame);
       } else {
         let random = Math.random() * 0.5;
         let progress = this.state.progress + random;

@@ -68,6 +68,7 @@ export function loadDataSync(onLoaded, keyStore) {
 
 const initialState = {
     dataInfo: {},
+    responseKey: 'none',
     isLoading: false,
     error: false,
 };
@@ -78,6 +79,7 @@ export const serviceReducer = (state = initialState, action) => {
             return {
                 isLoading: false,
                 error: false,
+                responseKey: action.responseKey,
                 dataInfo: action.payload.dataInfo,
             };
         }
@@ -85,6 +87,7 @@ export const serviceReducer = (state = initialState, action) => {
             return {
                 isLoading: true,
                 error: false,
+                responseKey: 'none',
                 dataInfo: {},
             };
         }
@@ -92,6 +95,7 @@ export const serviceReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
+                responseKey: 'none',
                 error: true,
             };
         }
@@ -100,37 +104,3 @@ export const serviceReducer = (state = initialState, action) => {
         }
     }
 };
-
-
-// function visibilityFilter(state = 'SHOW_ALL', action) {
-//     switch (action.type) {
-//         case 'SET_VISIBILITY_FILTER':
-//             return action.filter
-//         default:
-//             return state
-//     }
-// }
-
-// function todos(state = [], action) {
-//     switch (action.type) {
-//         case 'ADD_TODO':
-//             return [
-//                 ...state,
-//                 {
-//                     text: action.text,
-//                     completed: false
-//                 }
-//             ]
-//         case 'COMPLETE_TODO':
-//             return state.map((todo, index) => {
-//                 if (index === action.index) {
-//                     return Object.assign({}, todo, {
-//                         completed: true
-//                     })
-//                 }
-//                 return todo
-//             })
-//         default:
-//             return state
-//     }
-// }

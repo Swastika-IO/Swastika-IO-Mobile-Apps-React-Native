@@ -75,4 +75,4 @@ let styles = RkStyleSheet.create(theme => ({
   },
 }));
 
-export default connect()(ArticleDetails);
+export default connect() (ArticleDetails);

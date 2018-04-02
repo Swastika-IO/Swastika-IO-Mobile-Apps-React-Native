@@ -1,6 +1,7 @@
-export const fetchDataSuccess = (dataInfo) => (
+export const fetchDataSuccess = (dataInfo, responseKey) => (
   {
     type: 'FETCH_DATA_SUCCESS',
-    payload: { dataInfo },
+    responseKey: responseKey,
+    payload: { dataInfo }
   }
 );

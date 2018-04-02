@@ -20,11 +20,11 @@ export const AppNavigator = StackNavigator({
   Login: { screen: paramsToProps(RootRoutes.Login.screen) },
   Splash: { screen: paramsToProps(RootRoutes.Splash.screen) },
   Home: { screen: paramsToProps(RootRoutes.Home.screen) },
-  Mycustome: { screen: paramsToProps(RootRoutes.Mycustome.screen) },
+  MyModules: { screen: paramsToProps(RootRoutes.MyModules.screen) },
   MyChat: { screen: paramsToProps(RootRoutes.MyChat.screen) },
   ArticleDetail: { screen: paramsToProps(RootRoutes.ArticleDetail.screen) }
 }, {
-    headerMode: 'none',
+    // headerMode: 'none',
   });
 
 const AppWithNavigationState = ({ dispatch, nav }) => (

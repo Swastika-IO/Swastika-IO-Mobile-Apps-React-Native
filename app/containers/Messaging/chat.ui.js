@@ -77,7 +77,7 @@ export class Chat extends React.Component {
 
         this.connection.on('broadcastMessage', this.messageReceived);
 
-        this.connection.start().then(() => console.log(  "this.connection.id")).catch(err => (console.log(`start`)));
+        this.connection.start().then(() => console.log("this.connection.id")).catch(err => (console.log(`start`)));
 
     }
 
@@ -87,7 +87,7 @@ export class Chat extends React.Component {
 
     componentDidMount() {
         InteractionManager.runAfterInteractions(() => {
-            this.refs.list.scrollToEnd();
+            this.refs.list.scrollToOffset({x: 0, y: 0, animated: true});
         });
     }
 
@@ -120,18 +120,18 @@ export class Chat extends React.Component {
 
     _scroll() {
         if (Platform.OS === 'ios') {
-            this.refs.list.scrollToEnd();
+            this.refs.list.scrollToOffset({x: 0, y: 0, animated: true});
         } else {
-            _.delay(() => this.refs.list.scrollToEnd(), 100);
+            _.delay(() => this.refs.list.scrollToOffset({x: 0, y: 0, animated: true}), 100);
         }
     }
 
     _messageReceived(name, message) {
-        if( this.ID == name){
+        if (this.ID == name) {
             return;
         }
         let msg = {
-            id: message.length,
+            id: new Date().valueOf(),
             time: 0,
             type: 'in',
             text: message
@@ -139,7 +139,7 @@ export class Chat extends React.Component {
 
 
         let data = this.state.data;
-        data.messages.push(msg);
+        data.messages.unshift(msg);
 
         this.setState({
             data,
@@ -152,7 +152,7 @@ export class Chat extends React.Component {
         if (!this.state.message)
             return;
         let msg = {
-            id: this.state.data.messages.length,
+            id: new Date().valueOf(),
             time: 0,
             type: 'out',
             text: this.state.message
@@ -160,7 +160,7 @@ export class Chat extends React.Component {
 
 
         let data = this.state.data;
-        data.messages.push(msg);
+        data.messages.unshift(msg);
 
         this.setState({
             data,
@@ -168,7 +168,7 @@ export class Chat extends React.Component {
         });
         this._scroll(true);
 
-        this.connection.invoke('send', this.ID , this.state.message);
+        this.connection.invoke('send', this.ID, this.state.message);
     }
 
     render() {
@@ -217,7 +217,8 @@ let styles = RkStyleSheet.create(theme => ({
         backgroundColor: theme.colors.screen.base
     },
     list: {
-        paddingHorizontal: 17
+        paddingHorizontal: 17,
+        transform: [{ scaleY: -1 }]
     },
     footer: {
         flexDirection: 'row',
@@ -227,6 +228,7 @@ let styles = RkStyleSheet.create(theme => ({
     },
     item: {
         marginVertical: 14,
+        transform: [{ scaleY: -1 }],
         flex: 1,
         flexDirection: 'row'
     },
